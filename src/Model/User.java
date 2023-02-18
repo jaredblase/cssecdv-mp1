@@ -13,7 +13,7 @@ public class User {
     private int role;
     private int locked;
 
-    private static String hashPassword(String password) throws Exception {
+    private static String hashPassword(char[] password) throws Exception {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);
@@ -21,12 +21,12 @@ public class User {
         return hashPassword(password, salt);
     }
 
-    private static String hashPassword(String password, String salt) throws Exception {
+    private static String hashPassword(char[] password, String salt) throws Exception {
         return hashPassword(password, Base64.getDecoder().decode(salt));
     }
 
-    private static String hashPassword(String password, byte[] salt) throws Exception {
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
+    private static String hashPassword(char[] password, byte[] salt) throws Exception {
+        KeySpec spec = new PBEKeySpec(password, salt, 65536, 128);
 
         try {
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
@@ -41,15 +41,15 @@ public class User {
         }
     }
 
-    public User(String username, String password) throws Exception {
+    public User(String username, char[] password) throws Exception {
         this(username, password, 2);
     }
 
-    public User(String username, String password, int role) throws Exception {
+    public User(String username, char[] password, int role) throws Exception {
         this(username, password, role, 0);
     }
 
-    public User(String username, String password, int role, int locked) throws Exception {
+    public User(String username, char[] password, int role, int locked) throws Exception {
         this.username = username;
         this.password = hashPassword(password);
         this.role = role;
@@ -64,7 +64,7 @@ public class User {
         this.locked = locked;
     }
 
-    public boolean matchPassword(String password) {
+    public boolean matchPassword(char[] password) {
         try {
             return this.password.equals(hashPassword(password, this.password.substring(24)));
         } catch (Exception e) {
@@ -94,7 +94,7 @@ public class User {
         return password;
     }
 
-    public void setPassword(String password) throws Exception {
+    public void setPassword(char[] password) throws Exception {
         this.password = hashPassword(password);
     }
 

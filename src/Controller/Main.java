@@ -9,6 +9,7 @@ import View.Frame;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 
@@ -55,16 +56,18 @@ public class Main {
 //        sqlite.addProduct("Scanner", 10, 100.0);
 //
 //        // Add sample users
+//        char[] password = {'q', 'w', 'e', 'r', 't', 'y', '1', '2', '3', '4'};
 //        try {
-//            sqlite.addUser(new User("admin", "qwerty1234" , 5));
-//            sqlite.addUser(new User("manager", "qwerty1234", 4));
-//            sqlite.addUser(new User("staff", "qwerty1234", 3));
-//            sqlite.addUser(new User("client1", "qwerty1234", 2));
-//            sqlite.addUser(new User("client2", "qwerty1234", 2));
+//            sqlite.addUser(new User("admin", password, 5));
+//            sqlite.addUser(new User("manager", password, 4));
+//            sqlite.addUser(new User("staff", password, 3));
+//            sqlite.addUser(new User("client1", password, 2));
+//            sqlite.addUser(new User("client2", password, 2));
 //        } catch (Exception e) {
 //            e.printStackTrace();
+//        } finally {
+//            Arrays.fill(password, '0');
 //        }
-//        
 //        
 //        // Get users
 //        ArrayList<History> histories = sqlite.getHistory();

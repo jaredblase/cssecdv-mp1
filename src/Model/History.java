@@ -21,9 +21,8 @@ public class History {
     private String name;
     private int stock;
     private Timestamp timestamp;
+    private static final SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
 
-    private SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-    
     public History(String username, String name, int stock){
         this.username = username;
         this.name = name;

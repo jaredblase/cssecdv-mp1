@@ -12,7 +12,6 @@ public class Frame extends javax.swing.JFrame {
         initComponents();
     }
 
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -206,58 +205,77 @@ public class Frame extends javax.swing.JFrame {
     public Main main;
     public Login loginPnl = new Login();
     public Register registerPnl = new Register();
-    
-    private AdminHome adminHomePnl = new AdminHome();
-    private ManagerHome managerHomePnl = new ManagerHome();
-    private StaffHome staffHomePnl = new StaffHome();
-    private ClientHome clientHomePnl = new ClientHome();
-    
-    private CardLayout contentView = new CardLayout();
-    private CardLayout frameView = new CardLayout();
-    
-    public void init(Main controller){
+
+    private final AdminHome adminHomePnl = new AdminHome();
+    private final ManagerHome managerHomePnl = new ManagerHome();
+    private final StaffHome staffHomePnl = new StaffHome();
+    private final ClientHome clientHomePnl = new ClientHome();
+
+    private final CardLayout contentView = new CardLayout();
+    private final CardLayout frameView = new CardLayout();
+
+    public void init(Main controller) {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setTitle("CSSECDV - SECURITY Svcs");
         this.setLocationRelativeTo(null);
-        
+
         this.main = controller;
         loginPnl.frame = this;
         registerPnl.frame = this;
-        
+
         adminHomePnl.init(main.sqlite);
         clientHomePnl.init(main.sqlite);
         managerHomePnl.init(main.sqlite);
         staffHomePnl.init(main.sqlite);
-        
+
         Container.setLayout(frameView);
         Container.add(loginPnl, "loginPnl");
         Container.add(registerPnl, "registerPnl");
         Container.add(HomePnl, "homePnl");
         frameView.show(Container, "loginPnl");
-        
+
         Content.setLayout(contentView);
         Content.add(adminHomePnl, "adminHomePnl");
         Content.add(managerHomePnl, "managerHomePnl");
         Content.add(staffHomePnl, "staffHomePnl");
         Content.add(clientHomePnl, "clientHomePnl");
-        
+
         this.setVisible(true);
     }
-    
-    public void mainNav(){
+
+    public void mainNav() {
         frameView.show(Container, "homePnl");
     }
-    
-    public void loginNav(){
+
+    public void loginNav() {
         frameView.show(Container, "loginPnl");
     }
-    
-    public void registerNav(){
+
+    public void registerNav() {
         frameView.show(Container, "registerPnl");
     }
-    
-    public void registerAction(String username, String password, String confpass){
-        main.sqlite.addUser(username, password);
+
+    public void loginAction(String username, char[] password) {
+        User user = main.sqlite.getUserByUsername(username);
+        if (user == null) {
+            return;
+        }
+
+        if (!user.matchPassword(password)) {
+            return;
+        }
+
+        mainNav();
+    }
+
+    public void registerAction(String username, String password, String text) {
+        try {
+            if (password.equals(text)) {
+                main.sqlite.addUser(new User(username, password.toCharArray()));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

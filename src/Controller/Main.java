@@ -6,21 +6,21 @@ import Model.Logs;
 import Model.Product;
 import Model.User;
 import View.Frame;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
 
-
 public class Main {
-    
+
     public SQLite sqlite;
-    
+
     public static void main(String[] args) {
         new Main().init();
     }
-    
-    public void init(){
+
+    public void init() {
         // Initialize a driver object
         sqlite = new SQLite();
 
@@ -55,11 +55,15 @@ public class Main {
 //        sqlite.addProduct("Scanner", 10, 100.0);
 //
 //        // Add sample users
-//        sqlite.addUser("admin", "qwerty1234" , 5);
-//        sqlite.addUser("manager", "qwerty1234", 4);
-//        sqlite.addUser("staff", "qwerty1234", 3);
-//        sqlite.addUser("client1", "qwerty1234", 2);
-//        sqlite.addUser("client2", "qwerty1234", 2);
+//        try {
+//            sqlite.addUser(new User("admin", "qwerty1234" , 5));
+//            sqlite.addUser(new User("manager", "qwerty1234", 4));
+//            sqlite.addUser(new User("staff", "qwerty1234", 3));
+//            sqlite.addUser(new User("client1", "qwerty1234", 2));
+//            sqlite.addUser(new User("client2", "qwerty1234", 2));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 //        
 //        
 //        // Get users
@@ -99,10 +103,10 @@ public class Main {
 //            System.out.println(" Role: " + users.get(nCtr).getRole());
 //            System.out.println(" Locked: " + users.get(nCtr).getLocked());
 //        }
-        
+
         // Initialize User Interface
         Frame frame = new Frame();
         frame.init(this);
     }
-    
+
 }

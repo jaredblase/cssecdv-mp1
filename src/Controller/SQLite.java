@@ -4,6 +4,7 @@ import Model.History;
 import Model.Logs;
 import Model.Product;
 import Model.User;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -183,13 +184,15 @@ public class SQLite {
         }
     }
 
-    public void addUser(String username, String password) {
-        String sql = "INSERT INTO users(username,password) VALUES(?,?)";
+    public void addUser(User user) {
+        String sql = "INSERT INTO users(username,password,role,locked) VALUES(?,?,?,?)";
 
-        try (Connection conn = DriverManager.getConnection(driverURL);
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, username);
-            stmt.setString(2, password);
+        try (Connection conn = DriverManager.getConnection(driverURL)) {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getPassword());
+            stmt.setInt(3, user.getRole());
+            stmt.setInt(4, user.getLocked());
             stmt.executeUpdate();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -220,7 +223,7 @@ public class SQLite {
 
     public ArrayList<Logs> getLogs() {
         String sql = "SELECT id, event, username, desc, timestamp FROM logs";
-        ArrayList<Logs> logs = new ArrayList<Logs>();
+        ArrayList<Logs> logs = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(driverURL);
              Statement stmt = conn.createStatement();
@@ -241,7 +244,7 @@ public class SQLite {
 
     public ArrayList<Product> getProduct() {
         String sql = "SELECT id, name, stock, price FROM product";
-        ArrayList<Product> products = new ArrayList<Product>();
+        ArrayList<Product> products = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(driverURL);
              Statement stmt = conn.createStatement();
@@ -261,7 +264,7 @@ public class SQLite {
 
     public ArrayList<User> getUsers() {
         String sql = "SELECT id, username, password, role, locked FROM users";
-        ArrayList<User> users = new ArrayList<User>();
+        ArrayList<User> users = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(driverURL);
              Statement stmt = conn.createStatement();
@@ -280,16 +283,25 @@ public class SQLite {
         return users;
     }
 
-    public void addUser(String username, String password, int role) {
-        String sql = "INSERT INTO users(username,password,role) VALUES('" + username + "','" + password + "','" + role + "')";
+    public User getUserByUsername(String username) {
+        String sql = "SELECT id, username, password, role, locked FROM users WHERE username = ?";
 
-        try (Connection conn = DriverManager.getConnection(driverURL);
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
+        try (Connection conn = DriverManager.getConnection(driverURL)) {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
 
+            if (rs.next()) {
+                return new User(rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getInt("role"),
+                        rs.getInt("locked"));
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        return null;
     }
 
     public void removeUser(String username) {

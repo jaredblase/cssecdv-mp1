@@ -1,15 +1,11 @@
 
 package View;
 
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
-import java.awt.*;
-import java.util.Arrays;
+import java.awt.event.ActionListener;
 
 public class Login extends javax.swing.JPanel {
-
-    public Frame frame;
-
+    private ActionListener registerListener;
+    private LoginListener loginListener;
     public Login() {
         initComponents();
     }
@@ -110,13 +106,15 @@ public class Login extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
-        char[] password = passwordFld.getPassword();
-        frame.loginAction(usernameFld.getText(), password);
-        Arrays.fill(password, '0');
+        if (loginListener != null) {
+            loginListener.onLogin(usernameFld.getText(), passwordFld.getPassword());
+        }
     }//GEN-LAST:event_loginBtnActionPerformed
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
-        frame.registerNav();
+        if (registerListener != null) {
+            registerListener.actionPerformed(evt);
+        }
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void formAncestorRemoved(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_formAncestorRemoved
@@ -129,4 +127,16 @@ public class Login extends javax.swing.JPanel {
     private javax.swing.JPasswordField passwordFld;
     private javax.swing.JTextField usernameFld;
     // End of variables declaration//GEN-END:variables
+
+    public void setRegisterListener(ActionListener registerListener) {
+        this.registerListener = registerListener;
+    }
+
+    public void setLoginListener(LoginListener loginListener) {
+        this.loginListener = loginListener;
+    }
+
+    public interface LoginListener {
+        void onLogin(String username, char[] password);
+    }
 }

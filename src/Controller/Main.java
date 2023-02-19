@@ -5,17 +5,28 @@ import Model.History;
 import Model.Logs;
 import Model.Product;
 import Model.User;
+import View.AdminHome;
+import View.ClientHome;
 import View.Frame;
+import View.Login;
+import View.ManagerHome;
+import View.Register;
+import View.StaffHome;
+
+import java.awt.CardLayout;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import javax.swing.JPanel;
 
 
 public class Main {
 
     public SQLite sqlite = new SQLite();
+    private final JPanel container = new JPanel();
+    private final CardLayout frameView = new CardLayout();
 
     public static void main(String[] args) {
         new Main().init();
@@ -23,9 +34,63 @@ public class Main {
 
     public void init() {
 //        initDatabase();
+        CardLayout contentView = new CardLayout();
+        JPanel content = new JPanel();
+        Frame frame = new Frame(container, content);
 
-        Frame frame = new Frame();
-        frame.init(this);
+        AdminHome adminHomePnl = new AdminHome();
+        ManagerHome managerHomePnl = new ManagerHome();
+        StaffHome staffHomePnl = new StaffHome();
+        ClientHome clientHomePnl = new ClientHome();
+        Login loginPnl = new Login();
+        Register registerPnl = new Register();
+
+        adminHomePnl.init(sqlite);
+        clientHomePnl.init(sqlite);
+        managerHomePnl.init(sqlite);
+        staffHomePnl.init(sqlite);
+
+        container.setLayout(frameView);
+        container.add(loginPnl, Panel.LOGIN.name());
+        container.add(registerPnl, Panel.REGISTER.name());
+        frameView.show(container, Panel.LOGIN.name());
+
+        content.setLayout(contentView);
+        content.add(adminHomePnl, Panel.ADMIN.name());
+        content.add(managerHomePnl, Panel.MANAGER.name());
+        content.add(staffHomePnl, Panel.STAFF.name());
+        content.add(clientHomePnl, Panel.CLIENT.name());
+
+        new RegisterController(this, registerPnl, sqlite);
+        new LoginController(this, loginPnl, sqlite);
+
+        frame.setAdminActionListener(e -> {
+            adminHomePnl.showPnl("home");
+            contentView.show(content, Panel.ADMIN.name());
+        });
+
+        frame.setManagerActionListener(e -> {
+            managerHomePnl.showPnl("home");
+            contentView.show(content, Panel.MANAGER.name());
+        });
+
+        frame.setClientActionListener(e -> {
+            clientHomePnl.showPnl("home");
+            contentView.show(content, Panel.CLIENT.name());
+        });
+
+        frame.setStaffActionListener(e -> {
+            staffHomePnl.showPnl("home");
+            contentView.show(content, Panel.STAFF.name());
+        });
+
+        frame.setLogoutActionListener(e -> showPanel(Panel.LOGIN));
+
+        frame.init();
+    }
+
+    public void showPanel(Panel panel) {
+        frameView.show(container, panel.name());
     }
 
     private void initDatabase() {

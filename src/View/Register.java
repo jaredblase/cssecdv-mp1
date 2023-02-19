@@ -1,11 +1,12 @@
 
 package View;
 
+import java.awt.event.ActionListener;
 import java.util.Arrays;
 
 public class Register extends javax.swing.JPanel {
-
-    public Frame frame;
+    private ActionListener backListener;
+    private RegisterListener registerListener;
 
     public Register() {
         initComponents();
@@ -110,17 +111,20 @@ public class Register extends javax.swing.JPanel {
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         char[] password = passwordFld.getPassword();
         char[] confirm = confPassFld.getPassword();
+
+        if (registerListener != null) {
+            registerListener.onRegister(usernameFld.getText(), passwordFld.getPassword(), confPassFld.getPassword());
+        }
+
         
-        frame.registerAction(usernameFld.getText(), password, confirm);
-        
-        Arrays.fill(password, '0');
-        Arrays.fill(confirm, '0');
-        
-        frame.loginNav();
+
+
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
-        frame.loginNav();
+        if (backListener != null) {
+            backListener.actionPerformed(evt);
+        }
     }//GEN-LAST:event_backBtnActionPerformed
 
 
@@ -130,4 +134,16 @@ public class Register extends javax.swing.JPanel {
     private javax.swing.JPasswordField passwordFld;
     private javax.swing.JTextField usernameFld;
     // End of variables declaration//GEN-END:variables
+
+    public void setBackListener(ActionListener backListener) {
+        this.backListener = backListener;
+    }
+
+    public void setRegisterListener(RegisterListener registerListener) {
+        this.registerListener = registerListener;
+    }
+
+    public interface RegisterListener {
+        void onRegister(String username, char[] password, char[] confirm);
+    }
 }

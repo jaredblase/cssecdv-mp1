@@ -1,7 +1,6 @@
 package Model;
 
-import static Model.PasswordUtils.hashPassword;
-import static Model.PasswordUtils.matchHashToPassword;
+import static Model.PasswordUtils.*;
 
 public class User {
     private int id;
@@ -20,9 +19,9 @@ public class User {
 
     public User(String username, char[] password, int role, int locked) throws Exception {
         this.username = username;
-        this.password = hashPassword(password);
         this.role = role;
         this.locked = locked;
+        this.setPassword(password);
     }
 
     public User(int id, String username, String password, int role, int locked) {
@@ -58,6 +57,7 @@ public class User {
     }
 
     public void setPassword(char[] password) throws Exception {
+        validatePassword(password);
         this.password = hashPassword(password);
     }
 

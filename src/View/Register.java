@@ -35,6 +35,11 @@ public class Register extends javax.swing.JPanel {
         usernameFld.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         usernameFld.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         usernameFld.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "USERNAME", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
+        usernameFld.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                usernameFldKeyTyped(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -52,12 +57,22 @@ public class Register extends javax.swing.JPanel {
         passwordFld.setBackground(new java.awt.Color(240, 240, 240));
         passwordFld.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         passwordFld.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        passwordFld.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "PASSWORD", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        passwordFld.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "PASSWORD", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
+        passwordFld.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                passwordFldKeyTyped(evt);
+            }
+        });
 
         confPassFld.setBackground(new java.awt.Color(240, 240, 240));
         confPassFld.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         confPassFld.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        confPassFld.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "CONFIRM PASSWORD", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        confPassFld.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "CONFIRM PASSWORD", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
+        confPassFld.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                confPassFldKeyTyped(evt);
+            }
+        });
 
         errorLabel.setForeground(new java.awt.Color(255, 51, 51));
         errorLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -113,12 +128,11 @@ public class Register extends javax.swing.JPanel {
         char[] confirm = confPassFld.getPassword();
 
         if (registerListener != null) {
-            registerListener.onRegister(usernameFld.getText(), passwordFld.getPassword(), confPassFld.getPassword());
+            registerListener.onRegister(usernameFld.getText(), password, confirm);
         }
 
-        
-
-
+        Arrays.fill(password, '0');
+        Arrays.fill(confirm, '0');
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
@@ -126,6 +140,18 @@ public class Register extends javax.swing.JPanel {
             backListener.actionPerformed(evt);
         }
     }//GEN-LAST:event_backBtnActionPerformed
+
+    private void passwordFldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordFldKeyTyped
+        errorLabel.setText("");
+    }//GEN-LAST:event_passwordFldKeyTyped
+
+    private void confPassFldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_confPassFldKeyTyped
+         errorLabel.setText("");
+    }//GEN-LAST:event_confPassFldKeyTyped
+
+    private void usernameFldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_usernameFldKeyTyped
+        errorLabel.setText("");
+    }//GEN-LAST:event_usernameFldKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -141,6 +167,10 @@ public class Register extends javax.swing.JPanel {
 
     public void setRegisterListener(RegisterListener registerListener) {
         this.registerListener = registerListener;
+    }
+
+    public void setErrorMessage(String text) {
+        errorLabel.setText(text);
     }
 
     public interface RegisterListener {

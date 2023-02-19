@@ -35,9 +35,9 @@ public class PasswordUtils {
         }
     }
 
-    public static void validatePassword(char[] password) throws Exception {
+    public static void validatePassword(char[] password) throws PasswordException {
         if (password.length < 8) {
-            throw new Exception("Password should be 8 characters long.");
+            throw new PasswordException("Password should be 8 characters long.");
         }
 
         boolean hasUpperCase = false;
@@ -58,16 +58,16 @@ public class PasswordUtils {
         }
 
         if (!hasUpperCase) {
-            throw new Exception("Password must contain at least one uppercase letter");
+            throw new PasswordException("Password must contain at least one uppercase letter");
         }
         if (!hasLowerCase) {
-            throw new Exception("Password must contain at least one lowercase letter");
+            throw new PasswordException("Password must contain at least one lowercase letter");
         }
         if (!hasDigit) {
-            throw new Exception("Password must contain at least one digit");
+            throw new PasswordException("Password must contain at least one digit");
         }
         if (!hasSpecial) {
-            throw new Exception("Password must contain at least one special character");
+            throw new PasswordException("Password must contain at least one special character");
         }
     }
 

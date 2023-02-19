@@ -1,6 +1,5 @@
 package Controller;
 
-
 import Model.History;
 import Model.Logs;
 import Model.Product;
@@ -23,8 +22,6 @@ import javax.swing.JPanel;
 
 
 public class Main {
-
-    public SQLite sqlite = new SQLite();
     private final JPanel container = new JPanel();
     private final CardLayout frameView = new CardLayout();
 
@@ -33,7 +30,8 @@ public class Main {
     }
 
     public void init() {
-//        initDatabase();
+        final SQLite sqlite = new SQLite();
+//        initDatabase(sqlite);
         CardLayout contentView = new CardLayout();
         JPanel content = new JPanel();
         Frame frame = new Frame(container, content);
@@ -93,7 +91,7 @@ public class Main {
         frameView.show(container, panel.name());
     }
 
-    private void initDatabase() {
+    private void initDatabase(SQLite sqlite) {
         // Create a database
         sqlite.createNewDatabase();
 

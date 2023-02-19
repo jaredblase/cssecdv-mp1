@@ -284,7 +284,7 @@ public class SQLite {
         return users;
     }
 
-    public User getUserByUsername(String username) {
+    public User getUserByUsername(String username) throws Exception {
         String sql = "SELECT id, username, password, role, locked FROM users WHERE username = ?";
 
         try (Connection conn = DriverManager.getConnection(driverURL)) {
@@ -301,6 +301,7 @@ public class SQLite {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            throw ex;
         }
         return null;
     }

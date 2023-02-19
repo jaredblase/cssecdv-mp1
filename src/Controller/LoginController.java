@@ -3,8 +3,6 @@ package Controller;
 import Model.User;
 import View.Login;
 
-import java.util.Arrays;
-
 public class LoginController {
     private final Login loginView;
     private final Main main;
@@ -20,15 +18,26 @@ public class LoginController {
     }
 
     public void loginAction(String username, char[] password) {
+        if (username.length() == 0) {
+            loginView.setErrorMessage("Username cannot be empty.");
+            return;
+        }
+
+        if (password.length == 0) {
+            loginView.setErrorMessage("Password cannot be empty.");
+            return;
+        }
+
         try {
             User user = db.getUserByUsername(username);
             if (user == null || !user.matchPassword(password)) {
+                loginView.setErrorMessage("Invalid username or password.");
+                loginView.clearPasswordField();
                 return;
             }
-
             main.showPanel(Panel.HOME);
-        } finally {
-            Arrays.fill(password, '0');
+        } catch (Exception e) {
+            loginView.setErrorMessage("An problem occurred on our side. Please try again later.");
         }
     }
 }

@@ -2,6 +2,7 @@
 package View;
 
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class Login extends javax.swing.JPanel {
     private ActionListener registerListener;
@@ -65,7 +66,12 @@ public class Login extends javax.swing.JPanel {
         passwordFld.setBackground(new java.awt.Color(240, 240, 240));
         passwordFld.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         passwordFld.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        passwordFld.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "PASSWORD", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        passwordFld.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "PASSWORD", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
+        passwordFld.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                passwordFldKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -106,9 +112,11 @@ public class Login extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
+        char[] password = passwordFld.getPassword();
         if (loginListener != null) {
-            loginListener.onLogin(usernameFld.getText(), passwordFld.getPassword());
+            loginListener.onLogin(usernameFld.getText(), password);
         }
+        Arrays.fill(password, '0');
     }//GEN-LAST:event_loginBtnActionPerformed
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
@@ -120,7 +128,12 @@ public class Login extends javax.swing.JPanel {
     private void formAncestorRemoved(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_formAncestorRemoved
         usernameFld.setText("");
         passwordFld.setText("");
+        errorLabel.setText("");
     }//GEN-LAST:event_formAncestorRemoved
+
+    private void passwordFldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordFldKeyReleased
+        errorLabel.setText("");
+    }//GEN-LAST:event_passwordFldKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel errorLabel;
@@ -134,6 +147,14 @@ public class Login extends javax.swing.JPanel {
 
     public void setLoginListener(LoginListener loginListener) {
         this.loginListener = loginListener;
+    }
+
+    public void setErrorMessage(String text) {
+        errorLabel.setText(text);
+    }
+
+    public void clearPasswordField() {
+        passwordFld.setText("");
     }
 
     public interface LoginListener {

@@ -184,7 +184,7 @@ public class SQLite {
         }
     }
 
-    public void addUser(User user) {
+    public void addUser(User user) throws SQLException {
         String sql = "INSERT INTO users(username,password,role,locked) VALUES(?,?,?,?)";
 
         try (Connection conn = DriverManager.getConnection(driverURL)) {
@@ -194,8 +194,9 @@ public class SQLite {
             stmt.setInt(3, user.getRole());
             stmt.setInt(4, user.getLocked());
             stmt.executeUpdate();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
         }
     }
 

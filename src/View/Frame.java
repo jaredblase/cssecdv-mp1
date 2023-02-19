@@ -1,9 +1,10 @@
 package View;
 
 import Controller.Main;
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Dimension;
+import Model.User;
+
+import java.awt.*;
+import java.util.Arrays;
 import javax.swing.WindowConstants;
 
 public class Frame extends javax.swing.JFrame {
@@ -18,13 +19,13 @@ public class Frame extends javax.swing.JFrame {
         Container = new javax.swing.JPanel();
         HomePnl = new javax.swing.JPanel();
         Content = new javax.swing.JPanel();
-        Navigation = new javax.swing.JPanel();
+        javax.swing.JPanel Navigation = new javax.swing.JPanel();
         adminBtn = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        final javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
         managerBtn = new javax.swing.JButton();
         staffBtn = new javax.swing.JButton();
         clientBtn = new javax.swing.JButton();
-        logoutBtn = new javax.swing.JButton();
+        final javax.swing.JButton logoutBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(153, 153, 153));
@@ -268,13 +269,16 @@ public class Frame extends javax.swing.JFrame {
         mainNav();
     }
 
-    public void registerAction(String username, String password, String text) {
+    public void registerAction(String username, char[] password, char[] confirm) {
+        if (password.length != confirm.length || !Arrays.equals(password, confirm)) {
+            return;
+        }
+
         try {
-            if (password.equals(text)) {
-                main.sqlite.addUser(new User(username, password.toCharArray()));
-            }
+            User user = new User(username, password);
+            main.sqlite.addUser(user);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -282,11 +286,8 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JPanel Container;
     private javax.swing.JPanel Content;
     private javax.swing.JPanel HomePnl;
-    private javax.swing.JPanel Navigation;
     private javax.swing.JButton adminBtn;
     private javax.swing.JButton clientBtn;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JButton logoutBtn;
     private javax.swing.JButton managerBtn;
     private javax.swing.JButton staffBtn;
     // End of variables declaration//GEN-END:variables

@@ -2,6 +2,7 @@ package Controller;
 
 import Model.PasswordException;
 import Model.User;
+import Model.UsernameException;
 import View.Register;
 
 import java.sql.SQLException;
@@ -39,13 +40,16 @@ public class RegisterController {
             User user = new User(username, password);
             db.addUser(user);
             main.showPanel(Panel.LOGIN);
-        } catch (SQLException e) {
-            regView.setErrorMessage(e.getErrorCode() == 19 ? "Username is already taken." : "An error has occurred on our end. Please try again later.");
-        } catch (PasswordException e) {
+        } catch (PasswordException | UsernameException e) {
             regView.setErrorMessage(e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 19) {
+                regView.setErrorMessage("Username is already taken!");
+                return;
+            }
+
             regView.setErrorMessage("An error has occurred on our end. Please try again later.");
+            e.printStackTrace();
         }
     }
 }

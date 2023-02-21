@@ -86,7 +86,7 @@ public class SQLite {
                  username TEXT NOT NULL UNIQUE,
                  password TEXT NOT NULL,
                  role INTEGER DEFAULT 2,
-                 locked INTEGER DEFAULT 0
+                 attempts INTEGER DEFAULT 0
                 );""";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -191,14 +191,14 @@ public class SQLite {
     }
 
     public void addUser(User user) throws SQLException {
-        String sql = "INSERT INTO users(username,password,role,locked) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO users(username,password,role,attempts) VALUES(?,?,?,?)";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.setInt(3, user.getRole());
-            stmt.setInt(4, user.getLocked());
+            stmt.setInt(4, user.getAttempts());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -269,7 +269,7 @@ public class SQLite {
     }
 
     public ArrayList<User> getUsers() {
-        String sql = "SELECT id, username, password, role, locked FROM users";
+        String sql = "SELECT id, username, password, role, attempts FROM users";
         ArrayList<User> users = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -281,7 +281,7 @@ public class SQLite {
                         rs.getString("username"),
                         rs.getString("password"),
                         rs.getInt("role"),
-                        rs.getInt("locked")));
+                        rs.getInt("attempts")));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -290,7 +290,7 @@ public class SQLite {
     }
 
     public User getUserByUsername(String username) throws Exception {
-        String sql = "SELECT id, username, password, role, locked FROM users WHERE username = ?";
+        String sql = "SELECT id, username, password, role, attempts FROM users WHERE username = ?";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -302,7 +302,7 @@ public class SQLite {
                         rs.getString("username"),
                         rs.getString("password"),
                         rs.getInt("role"),
-                        rs.getInt("locked"));
+                        rs.getInt("attempts"));
             }
         } catch (Exception ex) {
             ex.printStackTrace();

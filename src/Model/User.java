@@ -7,29 +7,29 @@ public class User {
     private String username;
     private String password;
     private int role;
-    private int locked;
+    private int attempts;
 
-    public User(String username, char[] password) throws Exception {
+    public User(String username, char[] password) throws UsernameException, PasswordException {
         this(username, password, 2);
     }
 
-    public User(String username, char[] password, int role) throws Exception {
+    public User(String username, char[] password, int role) throws UsernameException, PasswordException {
         this(username, password, role, 0);
     }
 
-    public User(String username, char[] password, int role, int locked) throws Exception {
-        this.username = username;
-        this.role = role;
-        this.locked = locked;
+    public User(String username, char[] password, int role, int attempts) throws UsernameException, PasswordException {
+        this.setUsername(username);
         this.setPassword(password);
+        this.role = role;
+        this.attempts = attempts;
     }
 
-    public User(int id, String username, String password, int role, int locked) {
+    public User(int id, String username, String password, int role, int attempts) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.role = role;
-        this.locked = locked;
+        this.attempts = attempts;
     }
 
     public boolean matchPassword(char[] password) {
@@ -48,15 +48,23 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(String username) throws UsernameException {
+        if (username.length() > 20) {
+            throw new UsernameException("Username should be less than 20 characters");
+        }
+
+        if (username.contains(" ")) {
+            throw new UsernameException("Username should not contain a space character");
+        }
+
+        this.username = username.toLowerCase();
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(char[] password) throws Exception {
+    public void setPassword(char[] password) throws PasswordException {
         validatePassword(password);
         this.password = hashPassword(password);
     }
@@ -69,11 +77,15 @@ public class User {
         this.role = role;
     }
 
-    public int getLocked() {
-        return locked;
+    public int getAttempts() {
+        return attempts;
     }
 
-    public void setLocked(int locked) {
-        this.locked = locked;
+    public void setAttempts(int attempts) {
+        this.attempts = attempts;
+    }
+
+    public boolean getLocked() {
+        return attempts >= 3;
     }
 }

@@ -7,7 +7,7 @@ import java.security.spec.KeySpec;
 import java.util.Base64;
 
 public class PasswordUtils {
-    public static String hashPassword(char[] password) throws Exception {
+    public static String hashPassword(char[] password) throws PasswordException {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);
@@ -15,11 +15,11 @@ public class PasswordUtils {
         return hashPassword(password, salt);
     }
 
-    public static String hashPassword(char[] password, String salt) throws Exception {
+    public static String hashPassword(char[] password, String salt) throws PasswordException {
         return hashPassword(password, Base64.getDecoder().decode(salt));
     }
 
-    public static String hashPassword(char[] password, byte[] salt) throws Exception {
+    public static String hashPassword(char[] password, byte[] salt) throws PasswordException {
         KeySpec spec = new PBEKeySpec(password, salt, 65536, 128);
 
         try {
@@ -31,13 +31,13 @@ public class PasswordUtils {
             return hash + saltString;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new Exception("An error has occurred in hashing!");
+            throw new PasswordException("An error has occurred in hashing!");
         }
     }
 
     public static void validatePassword(char[] password) throws PasswordException {
-        if (password.length < 8) {
-            throw new PasswordException("Password should be 8 characters long.");
+        if (password.length < 8 || password.length > 40) {
+            throw new PasswordException("Password should be between 8 to 40 characters long.");
         }
 
         boolean hasUpperCase = false;

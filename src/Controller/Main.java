@@ -123,7 +123,7 @@ public class Main {
         sqlite.addProduct("Scanner", 10, 100.0);
 
         // Add sample users
-        char[] password = {'q', 'w', 'e', 'r', 't', 'y', '1', '2', '3', '4'};
+        char[] password = {'Q', 'w', 'e', 'r', 't', 'y', '1', '2', '3', '4', '.'};
         try {
             sqlite.addUser(new User("admin", password, 5));
             sqlite.addUser(new User("manager", password, 4));

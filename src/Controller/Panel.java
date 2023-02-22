@@ -8,4 +8,5 @@ public enum Panel {
     MANAGER,
     CLIENT,
     STAFF,
+    FORGOT_PASSWORD,
 }

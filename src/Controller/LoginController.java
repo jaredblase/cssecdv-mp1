@@ -14,6 +14,7 @@ public class LoginController {
         this.main = main;
 
         loginView.setRegisterListener(e -> main.showPanel(Panel.REGISTER));
+        loginView.setForgotPassword(e -> main.showPanel(Panel.FORGOT_PASSWORD));
         loginView.setLoginListener(this::loginAction);
     }
 

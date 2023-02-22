@@ -6,6 +6,7 @@ import Model.Product;
 import Model.User;
 import View.AdminHome;
 import View.ClientHome;
+import View.ForgotPassword;
 import View.Frame;
 import View.Login;
 import View.ManagerHome;
@@ -32,7 +33,7 @@ public class Main {
 
     public void init() {
         final SQLite sqlite = new SQLite();
-        initDatabase(sqlite);
+//        initDatabase(sqlite);
         CardLayout contentView = new CardLayout();
         JPanel content = new JPanel();
         Frame frame = new Frame(container, content);
@@ -43,6 +44,7 @@ public class Main {
         ClientHome clientHomePnl = new ClientHome();
         Login loginPnl = new Login();
         Register registerPnl = new Register();
+        ForgotPassword forgotPasswordPnl = new ForgotPassword();
 
         adminHomePnl.init(sqlite);
         clientHomePnl.init(sqlite);
@@ -52,6 +54,7 @@ public class Main {
         container.setLayout(frameView);
         container.add(loginPnl, Panel.LOGIN.name());
         container.add(registerPnl, Panel.REGISTER.name());
+        container.add(forgotPasswordPnl, Panel.FORGOT_PASSWORD.name());
         frameView.show(container, Panel.LOGIN.name());
 
         content.setLayout(contentView);
@@ -62,6 +65,7 @@ public class Main {
 
         new RegisterController(this, registerPnl, sqlite);
         new LoginController(this, loginPnl, sqlite);
+        new ForgotPasswordController(this, forgotPasswordPnl);
 
         frame.setAdminActionListener(e -> {
             adminHomePnl.showPnl("home");

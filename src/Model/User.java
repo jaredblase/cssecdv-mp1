@@ -1,5 +1,10 @@
 package Model;
 
+import Controller.SQLite;
+
+import java.sql.Timestamp;
+import java.util.Date;
+
 import static Model.PasswordUtils.*;
 
 public class User {
@@ -8,6 +13,7 @@ public class User {
     private String password;
     private int role;
     private int attempts;
+    public final static int MAX_ATTEMPTS = 3;
 
     public User(String username, char[] password) throws UsernameException, PasswordException {
         this(username, password, 2);
@@ -34,6 +40,10 @@ public class User {
 
     public boolean matchPassword(char[] password) {
         return matchHashToPassword(this.password, password);
+    }
+
+    public void log(SQLite sqlite, String desc) {
+        sqlite.addLogs("NOTICE", this.username, desc, new Timestamp(new Date().getTime()).toString());
     }
 
     public int getId() {
@@ -86,6 +96,6 @@ public class User {
     }
 
     public boolean getLocked() {
-        return attempts >= 3;
+        return attempts >= User.MAX_ATTEMPTS;
     }
 }

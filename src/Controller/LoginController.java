@@ -29,15 +29,31 @@ public class LoginController {
         }
 
         try {
-            User user = db.getUserByUsername(username);
-            if (user == null || !user.matchPassword(password)) {
-                loginView.setErrorMessage("Invalid username or password.");
+            User user = db.getUserByUsername(username.toLowerCase());
+            if (user == null || user.getLocked() || !user.matchPassword(password)) {
+                if (user != null) {
+                    user.setAttempts(user.getAttempts() + 1);
+                    db.setUserAttempts(user.getUsername(), user.getAttempts());
+                    user.log(db, "User login failed attempt");
+                    if (user.getAttempts() == User.MAX_ATTEMPTS) {
+                        user.log(db, "User locked");
+                    }
+                }
+
+                String error = user == null || !user.getLocked() ? "Invalid username or password." :
+                        "Too many failed attempts. Contact an admin to unlock this account.";
+                loginView.setErrorMessage(error);
                 loginView.clearPasswordField();
                 return;
             }
+
+            user.setAttempts(0);
+            db.clearUserAttempts(user.getUsername());
+            user.log(db, "User login successful");
+            main.setUser(user);
             main.showPanel(Panel.HOME);
         } catch (Exception e) {
-            loginView.setErrorMessage("An problem occurred on our side. Please try again later.");
+            loginView.setErrorMessage("A problem occurred on our side. Please try again later.");
         }
     }
 }

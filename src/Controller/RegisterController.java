@@ -39,6 +39,7 @@ public class RegisterController {
 
             User user = new User(username, password);
             db.addUser(user);
+            user.log(db, "User creation successful");
             main.showPanel(Panel.LOGIN);
         } catch (PasswordException | UsernameException e) {
             regView.setErrorMessage(e.getMessage());

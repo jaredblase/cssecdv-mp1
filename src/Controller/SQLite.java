@@ -193,17 +193,30 @@ public class SQLite {
     public void addUser(User user) throws SQLException {
         String sql = "INSERT INTO users(username,password,role,attempts) VALUES(?,?,?,?)";
 
+        Connection conn = DriverManager.getConnection(driverURL);
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        stmt.setString(1, user.getUsername());
+        stmt.setString(2, user.getPassword());
+        stmt.setInt(3, user.getRole());
+        stmt.setInt(4, user.getAttempts());
+        stmt.executeUpdate();
+    }
+
+    public void setUserAttempts(String username, int attempts) {
+        String sql = "UPDATE users SET attempts=? WHERE username=?";
+
         try (Connection conn = DriverManager.getConnection(driverURL);
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, user.getUsername());
-            stmt.setString(2, user.getPassword());
-            stmt.setInt(3, user.getRole());
-            stmt.setInt(4, user.getAttempts());
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, attempts);
+            stmt.setString(2, username);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            throw e;
         }
+    }
+
+    public void clearUserAttempts(String username) {
+        this.setUserAttempts(username, 0);
     }
 
     public ArrayList<History> getHistory() {

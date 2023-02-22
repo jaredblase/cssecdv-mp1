@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 public class Main {
     private final JPanel container = new JPanel();
     private final CardLayout frameView = new CardLayout();
+    private User user = null;
 
     public static void main(String[] args) {
         new Main().init();
@@ -31,7 +32,7 @@ public class Main {
 
     public void init() {
         final SQLite sqlite = new SQLite();
-//        initDatabase(sqlite);
+        initDatabase(sqlite);
         CardLayout contentView = new CardLayout();
         JPanel content = new JPanel();
         Frame frame = new Frame(container, content);
@@ -82,13 +83,21 @@ public class Main {
             contentView.show(content, Panel.STAFF.name());
         });
 
-        frame.setLogoutActionListener(e -> showPanel(Panel.LOGIN));
+        frame.setLogoutActionListener(e -> {
+            user.log(sqlite, "User logout");
+            user = null;
+            showPanel(Panel.LOGIN);
+        });
 
         frame.init();
     }
 
     public void showPanel(Panel panel) {
         frameView.show(container, panel.name());
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     private void initDatabase(SQLite sqlite) {

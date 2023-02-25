@@ -1,10 +1,5 @@
 package Model;
 
-import Controller.SQLite;
-
-import java.sql.Timestamp;
-import java.util.Date;
-
 import static Model.PasswordUtils.*;
 
 public class User {
@@ -40,10 +35,6 @@ public class User {
 
     public boolean matchPassword(char[] password) {
         return matchHashToPassword(this.password, password);
-    }
-
-    public void log(SQLite sqlite, String desc) {
-        sqlite.addLogs("NOTICE", this.username, desc, new Timestamp(new Date().getTime()).toString());
     }
 
     public int getId() {

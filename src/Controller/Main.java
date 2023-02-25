@@ -88,7 +88,7 @@ public class Main {
         });
 
         frame.setLogoutActionListener(e -> {
-            user.log(sqlite, "User logout");
+            sqlite.addUserEventLog(user, "User logout", null);
             user = null;
             showPanel(Panel.LOGIN);
         });

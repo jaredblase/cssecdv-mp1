@@ -7,6 +7,7 @@ import Model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class SQLite {
     public int DEBUG_MODE = 0;
@@ -169,11 +170,15 @@ public class SQLite {
             stmt.setString(1, event);
             stmt.setString(2, username);
             stmt.setString(3, desc);
-            stmt.setString(4, timestamp);
+            stmt.setString(4, timestamp == null ? new Timestamp(new Date().getTime()).toString() : timestamp);
             stmt.executeUpdate();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public void addUserEventLog(User user, String desc, String timestamp) {
+        addLogs("NOTICE", user.getUsername(), desc, timestamp);
     }
 
     public void addProduct(String name, int stock, double price) {

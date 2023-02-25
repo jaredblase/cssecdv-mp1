@@ -35,9 +35,9 @@ public class LoginController {
                 if (user != null) {
                     user.addAttempt();
                     db.saveUserAttempts(user);
-                    user.log(db, "User login failed attempt");
+                    db.addUserEventLog(user, "User login failed attempt", null);
                     if (user.getIsLocked()) {
-                        user.log(db, "User locked");
+                        db.addUserEventLog(user, "User locked", null);
                     }
                 }
 
@@ -50,7 +50,7 @@ public class LoginController {
 
             user.clearAttempts();
             db.saveUserAttempts(user);
-            user.log(db, "User login successful");
+            db.addUserEventLog(user, "User login successful", null);
             main.setUser(user);
             main.showPanel(Panel.HOME);
         } catch (Exception e) {

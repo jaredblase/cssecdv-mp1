@@ -202,21 +202,17 @@ public class SQLite {
         stmt.executeUpdate();
     }
 
-    public void setUserAttempts(String username, int attempts) {
+    public void saveUserAttempts(User u) {
         String sql = "UPDATE users SET attempts=? WHERE username=?";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, attempts);
-            stmt.setString(2, username);
+            stmt.setInt(1, u.getAttempts());
+            stmt.setString(2, u.getUsername());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public void clearUserAttempts(String username) {
-        this.setUserAttempts(username, 0);
     }
 
     public ArrayList<History> getHistory() {

@@ -9,9 +9,7 @@ import Controller.SQLite;
 import Model.User;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -51,7 +49,7 @@ public class MgmtUser extends javax.swing.JPanel {
                 users.get(nCtr).getUsername(), 
                 users.get(nCtr).getPassword(), 
                 users.get(nCtr).getRole(), 
-                users.get(nCtr).getLocked()});
+                users.get(nCtr).getIsLocked()});
         }
     }
 

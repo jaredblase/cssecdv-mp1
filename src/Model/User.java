@@ -58,7 +58,7 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) throws UsernameException {
+    private void setUsername(String username) throws UsernameException {
         if (username.length() > 20) {
             throw new UsernameException("Username should be less than 20 characters");
         }
@@ -91,11 +91,15 @@ public class User {
         return attempts;
     }
 
-    public void setAttempts(int attempts) {
-        this.attempts = attempts;
+    public void addAttempt() {
+        this.attempts++;
     }
 
-    public boolean getLocked() {
+    public void clearAttempts() {
+        this.attempts = 0;
+    }
+
+    public boolean getIsLocked() {
         return attempts >= User.MAX_ATTEMPTS;
     }
 }

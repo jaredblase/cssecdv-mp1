@@ -220,6 +220,17 @@ public class SQLite {
         }
     }
 
+    public void saveUserPassword(User u) throws SQLException {
+        String sql = "UPDATE users SET password=? WHERE username=?";
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, u.getPassword());
+            stmt.setString(2, u.getUsername());
+            stmt.executeUpdate();
+        }
+    }
+
     public ArrayList<History> getHistory() {
         String sql = "SELECT id, username, name, stock, timestamp FROM history";
         ArrayList<History> histories = new ArrayList<>();

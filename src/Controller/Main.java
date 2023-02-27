@@ -38,7 +38,7 @@ public class Main {
         JPanel content = new JPanel();
         Frame frame = new Frame(container, content);
 
-        AdminHome adminHomePnl = new AdminHome();
+        AdminHome adminHomePnl = new AdminHome(sqlite);
         ManagerHome managerHomePnl = new ManagerHome();
         StaffHome staffHomePnl = new StaffHome();
         ClientHome clientHomePnl = new ClientHome();
@@ -46,7 +46,6 @@ public class Main {
         Register registerPnl = new Register();
         ForgotPassword forgotPasswordPnl = new ForgotPassword();
 
-        adminHomePnl.init(sqlite);
         clientHomePnl.init(sqlite);
         managerHomePnl.init(sqlite);
         staffHomePnl.init(sqlite);
@@ -66,6 +65,7 @@ public class Main {
         new RegisterController(this, registerPnl, sqlite);
         new LoginController(this, loginPnl, sqlite);
         new ForgotPasswordController(this, forgotPasswordPnl);
+        new AdminHomeController(adminHomePnl, sqlite);
 
         frame.setAdminActionListener(e -> {
             adminHomePnl.showPnl("home");

@@ -6,7 +6,6 @@ import Model.UsernameException;
 import View.MgmtUser;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import static Model.PasswordUtils.validatePassword;
@@ -19,9 +18,13 @@ public class MgmtUserController {
         this.view = view;
         this.db = db;
 
+        view.setShowTableListener(this::onShowTable);
+        view.setChangePasswordListener(this::onChangePassword);
+    }
+    
+    private void onShowTable() {
         view.clearTableData();
         view.setTableData(db.getUsers());
-        view.setChangePasswordListener(this::onChangePassword);
     }
 
     private void onChangePassword(int idx, char[] password, char[] confirm) {

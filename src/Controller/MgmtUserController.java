@@ -6,6 +6,7 @@ import Model.UsernameException;
 import View.MgmtUser;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static Model.PasswordUtils.validatePassword;
@@ -18,10 +19,12 @@ public class MgmtUserController {
         this.view = view;
         this.db = db;
 
+        view.clearTableData();
+        view.setTableData(db.getUsers());
         view.setChangePasswordListener(this::onChangePassword);
     }
 
-    private void onChangePassword(String username, char[] password, char[] confirm) {
+    private void onChangePassword(int idx, char[] password, char[] confirm) {
         try {
             validatePassword(password);
 
@@ -29,7 +32,9 @@ public class MgmtUserController {
                 throw new PasswordException("Password and confirmation do not match!");
             }
 
+            String username = view.getUsernameAt(idx);
             db.saveUserPassword(new User(username, password));
+            view.setTableData(db.getUserByUsername(username), idx);
             view.closeDialog();
         } catch (UsernameException | PasswordException e) {
             view.setErrorMessage(e.getMessage());

@@ -9,8 +9,8 @@ import Controller.SQLite;
 import Model.User;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -20,6 +20,7 @@ public class MgmtUser extends javax.swing.JPanel {
     public DefaultTableModel tableModel;
     private ChangePasswordListener changePasswordListener;
     private final JLabel errorLbl = new JLabel("");
+    final JOptionPane optionPane = new JOptionPane();
     private final JDialog dialog;
 
     public MgmtUser(SQLite sqlite) {
@@ -33,6 +34,7 @@ public class MgmtUser extends javax.swing.JPanel {
         errorLbl.setHorizontalAlignment(SwingConstants.CENTER);
 
         dialog = new JDialog(SwingUtilities.getWindowAncestor(this));
+        dialog.setContentPane(optionPane);
 
 //        UNCOMMENT TO DISABLE BUTTONS
 //        editBtn.setVisible(false);
@@ -41,21 +43,36 @@ public class MgmtUser extends javax.swing.JPanel {
 //        chgpassBtn.setVisible(false);
     }
 
-    public void init() {
-        //      CLEAR TABLE
-        for (int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--) {
-            tableModel.removeRow(0);
-        }
+    public void clearTableData() {
+        tableModel.setRowCount(0);
+    }
 
-//      LOAD CONTENTS
-        ArrayList<User> users = sqlite.getUsers();
-        for (int nCtr = 0; nCtr < users.size(); nCtr++) {
-            tableModel.addRow(new Object[]{
-                    users.get(nCtr).getUsername(),
-                    users.get(nCtr).getPassword(),
-                    users.get(nCtr).getRole(),
-                    users.get(nCtr).getIsLocked()});
+    public void setTableData(User user, int index) {
+        var data = new Object[]{
+                user.getUsername(),
+                user.getPassword(),
+                user.getRole(),
+                user.getIsLocked()
+        };
+
+        for (int i = 0; i < data.length; i++) {
+            tableModel.setValueAt(data[i], index, i);
         }
+    }
+
+    public void setTableData(List<User> users) {
+        for (User user : users) {
+            tableModel.addRow(new Object[]{
+                    user.getUsername(),
+                    user.getPassword(),
+                    user.getRole(),
+                    user.getIsLocked()
+            });
+        }
+    }
+
+    public String getUsernameAt(int idx) {
+        return (String) table.getModel().getValueAt(idx, 0);
     }
 
     public void designer(JTextField component, String text) {
@@ -217,7 +234,6 @@ public class MgmtUser extends javax.swing.JPanel {
         int rowIdx = table.getSelectedRow();
         if (rowIdx < 0) return;
 
-        final JOptionPane optionPane = new JOptionPane();
         final JPasswordField passwordFld = new JPasswordField();
         final JPasswordField confFld = new JPasswordField();
 
@@ -228,17 +244,15 @@ public class MgmtUser extends javax.swing.JPanel {
         Object[] message = {"Enter New Password:", passwordFld, confFld, errorLbl};
 
         dialog.setTitle("CHANGE PASSWORD");
-        dialog.setContentPane(optionPane);
+        optionPane.setValue(JOptionPane.UNINITIALIZED_VALUE);
         optionPane.setMessage(message);
         optionPane.setMessageType(JOptionPane.PLAIN_MESSAGE);
         optionPane.setOptionType(JOptionPane.OK_CANCEL_OPTION);
 
         optionPane.addPropertyChangeListener(e -> {
             String prop = e.getPropertyName();
-            if (!dialog.isVisible() || e.getSource() != optionPane || !prop.equals(JOptionPane.VALUE_PROPERTY)) {
-                dialog.setVisible(false);
-                return;
-            }
+            if (!dialog.isVisible() || e.getSource() != optionPane || !prop.equals(JOptionPane.VALUE_PROPERTY) ||
+                    e.getNewValue().equals(JOptionPane.UNINITIALIZED_VALUE)) return;
 
             int value = (Integer) e.getNewValue();
             if (value == JOptionPane.CANCEL_OPTION) {
@@ -246,11 +260,10 @@ public class MgmtUser extends javax.swing.JPanel {
                 return;
             }
 
-            String username = (String) table.getModel().getValueAt(rowIdx, 0);
             char[] password = passwordFld.getPassword();
             char[] confirm = confFld.getPassword();
 
-            changePasswordListener.onChangePassword(username, password, confirm);
+            changePasswordListener.onChangePassword(rowIdx, password, confirm);
 
             Arrays.fill(password, '0');
             Arrays.fill(confirm, '0');
@@ -266,6 +279,7 @@ public class MgmtUser extends javax.swing.JPanel {
     public void setErrorMessage(String text) {
         // add text wrap behavior
         errorLbl.setText("<html>" + text + "</html>");
+        optionPane.setValue(JOptionPane.UNINITIALIZED_VALUE);
     }
 
     public void closeDialog() {
@@ -281,6 +295,6 @@ public class MgmtUser extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public interface ChangePasswordListener {
-        void onChangePassword(String username, char[] password, char[] confirm);
+        void onChangePassword(int idx, char[] password, char[] confirm);
     }
 }

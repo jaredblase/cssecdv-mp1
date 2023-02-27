@@ -314,7 +314,7 @@ public class SQLite {
         return users;
     }
 
-    public User getUserByUsername(String username) throws Exception {
+    public User getUserByUsername(String username) throws SQLException {
         String sql = "SELECT id, username, password, role, attempts FROM users WHERE username = ?";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -329,10 +329,8 @@ public class SQLite {
                         rs.getInt("role"),
                         rs.getInt("attempts"));
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw ex;
         }
+
         return null;
     }
 

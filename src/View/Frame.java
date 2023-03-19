@@ -242,6 +242,10 @@ public class Frame extends javax.swing.JFrame {
         this.logoutActionListener = logoutActionListener;
     }
 
+    public JPanel getContent() {
+        return this.content;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel HomePnl;
     private javax.swing.JPanel container;

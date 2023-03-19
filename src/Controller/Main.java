@@ -98,7 +98,6 @@ public class Main {
             Arrays.fill(password, '0');
         }
 
-        // Get users
         ArrayList<History> histories = sqlite.getHistory();
         for (History history : histories) {
             System.out.println("===== History " + history.getId() + " =====");
@@ -108,7 +107,6 @@ public class Main {
             System.out.println(" Timestamp: " + history.getTimestamp());
         }
 
-        // Get users
         ArrayList<Logs> logs = sqlite.getLogs();
         for (Logs log : logs) {
             System.out.println("===== Logs " + log.getId() + " =====");
@@ -118,15 +116,14 @@ public class Main {
             System.out.println(" Timestamp: " + log.getTimestamp());
         }
 
-        // Get users
-        ArrayList<Product> products = sqlite.getProduct();
+        ArrayList<Product> products = sqlite.getProducts();
         for (Product product : products) {
             System.out.println("===== Product " + product.getId() + " =====");
             System.out.println(" Name: " + product.getName());
             System.out.println(" Stock: " + product.getStock());
             System.out.println(" Price: " + product.getPrice());
         }
-        // Get users
+
         ArrayList<User> users = sqlite.getUsers();
         for (User user : users) {
             System.out.println("===== User " + user.getId() + " =====");

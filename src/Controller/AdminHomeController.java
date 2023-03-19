@@ -11,18 +11,15 @@ public class AdminHomeController {
     private final JPanel content;
     public AdminHomeController(AdminHome view, SQLite db) {
         MgmtHistory mgmtHistory = new MgmtHistory(db);
-        MgmtProduct mgmtProduct = new MgmtProduct(db);
         MgmtLogs mgmtLogs = new MgmtLogs(db);
         MgmtUser mgmtUser = new MgmtUser();
 
         new MgmtUserController(mgmtUser, db);
-        new MgmtProductController(mgmtProduct, db);
 
         content = view.getContent();
         content.setLayout(contentView);
         content.add(new Home("WELCOME ADMIN!", new java.awt.Color(51, 153, 255)), "home");
         content.add(mgmtUser, Panel.USERS.name());
-        content.add(mgmtProduct, Panel.PRODUCTS.name());
         content.add(mgmtHistory, Panel.HISTORY.name());
         content.add(mgmtLogs, Panel.LOGS.name());
 

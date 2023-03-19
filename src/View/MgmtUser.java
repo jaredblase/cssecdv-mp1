@@ -16,7 +16,7 @@ import javax.swing.table.DefaultTableModel;
 public class MgmtUser extends javax.swing.JPanel {
     public DefaultTableModel tableModel;
     private ChangePasswordListener changePasswordListener;
-    private ShowComponentListener showTableListener; 
+    private ShowComponentListener showTableListener;
     private final JLabel errorLbl = new JLabel("");
     final JOptionPane optionPane = new JOptionPane();
     private final JDialog dialog;
@@ -306,9 +306,5 @@ public class MgmtUser extends javax.swing.JPanel {
 
     public interface ChangePasswordListener {
         void onChangePassword(int idx, char[] password, char[] confirm);
-    }
-    
-    public interface ShowComponentListener {
-        void onShow();
     }
 }

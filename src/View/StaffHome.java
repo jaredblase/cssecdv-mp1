@@ -35,7 +35,7 @@ public class StaffHome extends javax.swing.JPanel {
     public void init(SQLite sqlite){
         mgmtHistory = new MgmtHistory(sqlite);
         mgmtLogs = new MgmtLogs(sqlite);
-        mgmtProduct = new MgmtProduct(sqlite);
+        mgmtProduct = new MgmtProduct();
         mgmtUser = new MgmtUser();
     
         Content.setLayout(contentView);
@@ -113,7 +113,6 @@ public class StaffHome extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void productsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productsBtnActionPerformed
-        mgmtProduct.init();
         productsBtn.setForeground(Color.red);
         contentView.show(Content, "mgmtProduct");
     }//GEN-LAST:event_productsBtnActionPerformed

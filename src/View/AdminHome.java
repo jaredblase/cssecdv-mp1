@@ -16,8 +16,6 @@ import java.awt.event.ActionListener;
  */
 public class AdminHome extends javax.swing.JPanel {
     private ActionListener usersBtnListener;
-    private ActionListener productsBtnListener;
-    private ActionListener historyBtnListener;
     private ActionListener logsBtnListener;
 
     public AdminHome() {
@@ -32,9 +30,7 @@ public class AdminHome extends javax.swing.JPanel {
     private void initComponents() {
 
         usersBtn = new javax.swing.JButton();
-        productsBtn = new javax.swing.JButton();
         Content = new javax.swing.JPanel();
-        historyBtn = new javax.swing.JButton();
         logsBtn = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(51, 153, 255));
@@ -52,14 +48,6 @@ public class AdminHome extends javax.swing.JPanel {
             }
         });
 
-        productsBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        productsBtn.setText("PRODUCTS");
-        productsBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                productsBtnActionPerformed(evt);
-            }
-        });
-
         Content.setBackground(new java.awt.Color(51, 153, 255));
 
         javax.swing.GroupLayout ContentLayout = new javax.swing.GroupLayout(Content);
@@ -72,14 +60,6 @@ public class AdminHome extends javax.swing.JPanel {
             ContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 271, Short.MAX_VALUE)
         );
-
-        historyBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        historyBtn.setText("HISTORY");
-        historyBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                historyBtnActionPerformed(evt);
-            }
-        });
 
         logsBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         logsBtn.setText("LOGS");
@@ -98,13 +78,9 @@ public class AdminHome extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Content, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(usersBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(productsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(historyBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(logsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(usersBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(logsBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -113,8 +89,6 @@ public class AdminHome extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(usersBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(productsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(historyBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(logsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Content, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -124,8 +98,6 @@ public class AdminHome extends javax.swing.JPanel {
 
     private void usersBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usersBtnActionPerformed
         usersBtn.setForeground(Color.red);
-        productsBtn.setForeground(Color.black);
-        historyBtn.setForeground(Color.black);
         logsBtn.setForeground(Color.black);
 
         if (usersBtnListener != null) {
@@ -133,32 +105,8 @@ public class AdminHome extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_usersBtnActionPerformed
 
-    private void productsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productsBtnActionPerformed
-        usersBtn.setForeground(Color.black);
-        productsBtn.setForeground(Color.red);
-        historyBtn.setForeground(Color.black);
-        logsBtn.setForeground(Color.black);
-
-        if (productsBtnListener != null) {
-            productsBtnListener.actionPerformed(evt);
-        }
-    }//GEN-LAST:event_productsBtnActionPerformed
-
-    private void historyBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyBtnActionPerformed
-        usersBtn.setForeground(Color.black);
-        productsBtn.setForeground(Color.black);
-        historyBtn.setForeground(Color.red);
-        logsBtn.setForeground(Color.black);
-
-        if (historyBtnListener != null) {
-            historyBtnListener.actionPerformed(evt);
-        }
-    }//GEN-LAST:event_historyBtnActionPerformed
-
     private void logsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logsBtnActionPerformed
         usersBtn.setForeground(Color.black);
-        productsBtn.setForeground(Color.black);
-        historyBtn.setForeground(Color.black);
         logsBtn.setForeground(Color.red);
 
         if (logsBtnListener != null) {
@@ -168,8 +116,6 @@ public class AdminHome extends javax.swing.JPanel {
 
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
         usersBtn.setForeground(Color.black);
-        productsBtn.setForeground(Color.black);
-        historyBtn.setForeground(Color.black);
         logsBtn.setForeground(Color.black);
     }//GEN-LAST:event_formComponentShown
 
@@ -181,23 +127,13 @@ public class AdminHome extends javax.swing.JPanel {
         this.usersBtnListener = usersBtnListener;
     }
 
-    public void setProductsBtnListener(ActionListener productsBtnListener) {
-        this.productsBtnListener = productsBtnListener;
-    }
-
-    public void setHistoryBtnListener(ActionListener historyBtnListener) {
-        this.historyBtnListener = historyBtnListener;
-    }
-
     public void setLogsBtnListener(ActionListener logsBtnListener) {
         this.logsBtnListener = logsBtnListener;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Content;
-    private javax.swing.JButton historyBtn;
     private javax.swing.JButton logsBtn;
-    private javax.swing.JButton productsBtn;
     private javax.swing.JButton usersBtn;
     // End of variables declaration//GEN-END:variables
 }

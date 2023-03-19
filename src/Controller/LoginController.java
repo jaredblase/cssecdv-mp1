@@ -51,7 +51,7 @@ public class LoginController {
             user.clearAttempts();
             db.saveUserAttempts(user);
             db.addUserEventLog(user, "User login successful", null);
-            main.setUser(user);
+//            main.setUser(user);
             main.showPanel(Panel.HOME);
         } catch (Exception e) {
             loginView.setErrorMessage("A problem occurred on our side. Please try again later.");

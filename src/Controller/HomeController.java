@@ -16,7 +16,6 @@ public class HomeController {
         ClientHome clientHomePnl = new ClientHome();
 
         clientHomePnl.init(db);
-        managerHomePnl.init(db);
         staffHomePnl.init(db);
 
         JPanel content = frame.getContent();
@@ -53,5 +52,6 @@ public class HomeController {
         });
 
         new AdminHomeController(adminHomePnl, db);
+        new ManagerHomeController(managerHomePnl, db);
     }
 }

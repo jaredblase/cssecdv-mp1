@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 public class AdminHomeController {
     private final CardLayout contentView = new CardLayout();
     private final JPanel content;
+
     public AdminHomeController(AdminHome view, SQLite db) {
         MgmtHistory mgmtHistory = new MgmtHistory(db);
         MgmtLogs mgmtLogs = new MgmtLogs(db);
@@ -24,21 +25,11 @@ public class AdminHomeController {
         content.add(mgmtLogs, Panel.LOGS.name());
 
         view.setUsersBtnListener(this::onUsersAction);
-        view.setProductsBtnListener(this::onProductAction);
-        view.setHistoryBtnListener(this::onHistoryAction);
         view.setLogsBtnListener(this::onLogsAction);
     }
 
     private void onUsersAction(ActionEvent e) {
         contentView.show(content, Panel.USERS.name());
-    }
-
-    private void onProductAction(ActionEvent e) {
-        contentView.show(content, Panel.PRODUCTS.name());
-    }
-
-    private void onHistoryAction(ActionEvent e) {
-        contentView.show(content, Panel.HISTORY.name());
     }
 
     private void onLogsAction(ActionEvent e) {

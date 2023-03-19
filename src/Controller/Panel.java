@@ -9,4 +9,8 @@ public enum Panel {
     CLIENT,
     STAFF,
     FORGOT_PASSWORD,
+    USERS,
+    PRODUCTS,
+    HISTORY,
+    LOGS,
 }

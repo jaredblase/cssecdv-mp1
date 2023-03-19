@@ -1,0 +1,50 @@
+package Controller;
+
+import View.*;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+
+public class AdminHomeController {
+    private final CardLayout contentView = new CardLayout();
+    private final JPanel content;
+    public AdminHomeController(AdminHome view, SQLite db) {
+        MgmtHistory mgmtHistory = new MgmtHistory(db);
+        MgmtProduct mgmtProduct = new MgmtProduct(db);
+        MgmtLogs mgmtLogs = new MgmtLogs(db);
+        MgmtUser mgmtUser = new MgmtUser();
+
+        new MgmtUserController(mgmtUser, db);
+        new MgmtProductController(mgmtProduct, db);
+
+        content = view.getContent();
+        content.setLayout(contentView);
+        content.add(new Home("WELCOME ADMIN!", new java.awt.Color(51, 153, 255)), "home");
+        content.add(mgmtUser, Panel.USERS.name());
+        content.add(mgmtProduct, Panel.PRODUCTS.name());
+        content.add(mgmtHistory, Panel.HISTORY.name());
+        content.add(mgmtLogs, Panel.LOGS.name());
+
+        view.setUsersBtnListener(this::onUsersAction);
+        view.setProductsBtnListener(this::onProductAction);
+        view.setHistoryBtnListener(this::onHistoryAction);
+        view.setLogsBtnListener(this::onLogsAction);
+    }
+
+    private void onUsersAction(ActionEvent e) {
+        contentView.show(content, Panel.USERS.name());
+    }
+
+    private void onProductAction(ActionEvent e) {
+        contentView.show(content, Panel.PRODUCTS.name());
+    }
+
+    private void onHistoryAction(ActionEvent e) {
+        contentView.show(content, Panel.HISTORY.name());
+    }
+
+    private void onLogsAction(ActionEvent e) {
+        contentView.show(content, Panel.LOGS.name());
+    }
+}

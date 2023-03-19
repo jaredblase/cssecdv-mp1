@@ -346,7 +346,7 @@ public class SQLite {
         }
     }
 
-    public Product getProductsById(String name) {
+    public Product getProductById(String name) {
         String sql = "SELECT `name`, stock, price FROM product WHERE `name`=?";
         Product product = null;
         try (Connection conn = DriverManager.getConnection(driverURL);

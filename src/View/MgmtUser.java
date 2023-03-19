@@ -5,7 +5,6 @@
  */
 package View;
 
-import Controller.SQLite;
 import Model.User;
 
 import java.awt.*;
@@ -15,8 +14,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class MgmtUser extends javax.swing.JPanel {
-
-    public SQLite sqlite;
     public DefaultTableModel tableModel;
     private ChangePasswordListener changePasswordListener;
     private ShowComponentListener showTableListener; 
@@ -24,9 +21,8 @@ public class MgmtUser extends javax.swing.JPanel {
     final JOptionPane optionPane = new JOptionPane();
     private final JDialog dialog;
 
-    public MgmtUser(SQLite sqlite) {
+    public MgmtUser() {
         initComponents();
-        this.sqlite = sqlite;
         tableModel = (DefaultTableModel) table.getModel();
         table.getTableHeader().setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
 
@@ -36,12 +32,6 @@ public class MgmtUser extends javax.swing.JPanel {
 
         dialog = new JDialog(SwingUtilities.getWindowAncestor(this));
         dialog.setContentPane(optionPane);
-
-//        UNCOMMENT TO DISABLE BUTTONS
-//        editBtn.setVisible(false);
-//        deleteBtn.setVisible(false);
-//        lockBtn.setVisible(false);
-//        chgpassBtn.setVisible(false);
     }
 
     public void clearTableData() {

@@ -16,7 +16,6 @@ public class SQLite {
     public void createNewDatabase() {
         try (Connection conn = DriverManager.getConnection(driverURL)) {
             if (conn != null) {
-//                DatabaseMetaData meta = conn.getMetaData();
                 System.out.println("Database database.db created.");
             }
         } catch (Exception ex) {
@@ -148,7 +147,7 @@ public class SQLite {
     }
 
     public void addHistory(String username, String name, int stock, String timestamp) {
-        String sql = "INSERT INTO history(username,name,stock,timestamp) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO history(username,`name`,stock,`timestamp`) VALUES(?,?,?,?)";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -163,7 +162,7 @@ public class SQLite {
     }
 
     public void addLogs(String event, String username, String desc, String timestamp) {
-        String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO logs(event,username,`desc`,`timestamp`) VALUES(?,?,?,?)";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -182,7 +181,7 @@ public class SQLite {
     }
 
     public void addProduct(String name, int stock, double price) {
-        String sql = "INSERT INTO product(name,stock,price) VALUES(?,?,?)";
+        String sql = "INSERT INTO product(`name`,stock,price) VALUES(?,?,?)";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -196,7 +195,7 @@ public class SQLite {
     }
 
     public void addUser(User user) throws SQLException {
-        String sql = "INSERT INTO users(username,password,role,attempts) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO users(username,password,`role`,attempts) VALUES(?,?,?,?)";
 
         Connection conn = DriverManager.getConnection(driverURL);
         PreparedStatement stmt = conn.prepareStatement(sql);
@@ -232,7 +231,7 @@ public class SQLite {
     }
 
     public ArrayList<History> getHistory() {
-        String sql = "SELECT id, username, name, stock, timestamp FROM history";
+        String sql = "SELECT id, username, `name`, stock, `timestamp` FROM history";
         ArrayList<History> histories = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -253,7 +252,7 @@ public class SQLite {
     }
 
     public ArrayList<Logs> getLogs() {
-        String sql = "SELECT id, event, username, desc, timestamp FROM logs";
+        String sql = "SELECT id, event, username, `desc`, `timestamp` FROM logs";
         ArrayList<Logs> logs = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -273,8 +272,8 @@ public class SQLite {
         return logs;
     }
 
-    public ArrayList<Product> getProduct() {
-        String sql = "SELECT id, name, stock, price FROM product";
+    public ArrayList<Product> getProducts() {
+        String sql = "SELECT id, `name`, stock, price FROM product";
         ArrayList<Product> products = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -294,7 +293,7 @@ public class SQLite {
     }
 
     public ArrayList<User> getUsers() {
-        String sql = "SELECT id, username, password, role, attempts FROM users";
+        String sql = "SELECT id, username, password, `role`, attempts FROM users";
         ArrayList<User> users = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -334,7 +333,7 @@ public class SQLite {
         return null;
     }
 
-    public void removeUser(String username) {
+    public void removeUserByUsername(String username) {
         String sql = "DELETE FROM users WHERE username=?";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -347,8 +346,8 @@ public class SQLite {
         }
     }
 
-    public Product getProduct(String name) {
-        String sql = "SELECT name, stock, price FROM product WHERE name=?";
+    public Product getProductsById(String name) {
+        String sql = "SELECT `name`, stock, price FROM product WHERE `name`=?";
         Product product = null;
         try (Connection conn = DriverManager.getConnection(driverURL);
              PreparedStatement stmt = conn.prepareStatement(sql)) {

@@ -12,7 +12,9 @@ import Model.Product;
 import Model.User;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -20,40 +22,14 @@ import javax.swing.table.DefaultTableModel;
  * @author BeepXD
  */
 public class StaffHome extends javax.swing.JPanel {
+    private ActionListener productsBtnListener;
 
-    public MgmtHistory mgmtHistory;
-    public MgmtLogs mgmtLogs;
-    public MgmtProduct mgmtProduct;
-    public MgmtUser mgmtUser;
-    
-    private CardLayout contentView = new CardLayout();
-    
     public StaffHome() {
         initComponents();
     }
     
-    public void init(SQLite sqlite){
-        mgmtHistory = new MgmtHistory(sqlite);
-        mgmtLogs = new MgmtLogs(sqlite);
-        mgmtProduct = new MgmtProduct();
-        mgmtUser = new MgmtUser();
-    
-        Content.setLayout(contentView);
-        Content.add(new Home("WELCOME STAFF!", new java.awt.Color(0,204,102)), "home");
-        Content.add(mgmtUser, "mgmtUser");
-        Content.add(mgmtHistory, "mgmtHistory");
-        Content.add(mgmtProduct, "mgmtProduct");
-        Content.add(mgmtLogs, "mgmtLogs");
-        
-//        UNCOMMENT TO DISABLE BUTTONS
-//        historyBtn.setVisible(false);
-//        usersBtn.setVisible(false);
-//        productsBtn.setVisible(false);
-//        logsBtn.setVisible(false);
-    }
-    
     public void showPnl(String panelName){
-        contentView.show(Content, panelName);
+        ((CardLayout) this.Content.getLayout()).show(Content, panelName);
     }
 
     /**
@@ -68,6 +44,11 @@ public class StaffHome extends javax.swing.JPanel {
         Content = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(0, 204, 102));
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
 
         productsBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         productsBtn.setText("PRODUCTS");
@@ -114,10 +95,23 @@ public class StaffHome extends javax.swing.JPanel {
 
     private void productsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productsBtnActionPerformed
         productsBtn.setForeground(Color.red);
-        contentView.show(Content, "mgmtProduct");
+
+        if (productsBtnListener != null) {
+            productsBtnListener.actionPerformed(evt);
+        }
     }//GEN-LAST:event_productsBtnActionPerformed
-    
-    
+
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        productsBtn.setForeground(Color.black);
+    }//GEN-LAST:event_formComponentShown
+
+    public void setProductsBtnListener(ActionListener productsBtnListener) {
+        this.productsBtnListener = productsBtnListener;
+    }
+
+    public JPanel getContent() {
+        return this.Content;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Content;

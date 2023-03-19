@@ -41,6 +41,11 @@ public class ManagerHome extends javax.swing.JPanel {
         historyBtn = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(153, 102, 255));
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                formComponentShown(evt);
+            }
+        });
 
         productsBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         productsBtn.setText("PRODUCTS");
@@ -115,6 +120,11 @@ public class ManagerHome extends javax.swing.JPanel {
             historyBtnListener.actionPerformed(evt);
         }
     }//GEN-LAST:event_historyBtnActionPerformed
+
+    private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
+        productsBtn.setForeground(Color.black);
+        historyBtn.setForeground(Color.black);
+    }//GEN-LAST:event_formComponentShown
 
     public JPanel getContent() {
         return this.Content;

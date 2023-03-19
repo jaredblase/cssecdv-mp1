@@ -1,5 +1,8 @@
-package Controller;
+package Controller.rolehome;
 
+import Controller.MgmtProductController;
+import Controller.Panel;
+import Controller.SQLite;
 import View.*;
 
 import javax.swing.*;
@@ -19,15 +22,15 @@ public class ManagerHomeController {
         content = view.getContent();
         content.setLayout(contentView);
         content.add(new Home("WELCOME MANAGER!", new java.awt.Color(153,102,255)), "home");
-        content.add(mgmtProduct, Panel.PRODUCTS.name());
-        content.add(mgmtHistory, Panel.HISTORY.name());
+        content.add(mgmtProduct, Controller.Panel.PRODUCTS.name());
+        content.add(mgmtHistory, Controller.Panel.HISTORY.name());
 
         view.setProductsBtnListener(this::onProductAction);
         view.setHistoryBtnListener(this::onHistoryAction);
     }
 
     private void onProductAction(ActionEvent e) {
-        contentView.show(content, Panel.PRODUCTS.name());
+        contentView.show(content, Controller.Panel.PRODUCTS.name());
     }
 
     private void onHistoryAction(ActionEvent e) {

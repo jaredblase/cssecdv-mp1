@@ -1,5 +1,9 @@
 package Controller;
 
+import Controller.rolehome.AdminHomeController;
+import Controller.rolehome.ClientHomeController;
+import Controller.rolehome.ManagerHomeController;
+import Controller.rolehome.StaffHomeController;
 import View.*;
 import View.Frame;
 
@@ -15,8 +19,10 @@ public class HomeController {
         StaffHome staffHomePnl = new StaffHome();
         ClientHome clientHomePnl = new ClientHome();
 
-        clientHomePnl.init(db);
-        staffHomePnl.init(db);
+        new AdminHomeController(adminHomePnl, db);
+        new ManagerHomeController(managerHomePnl, db);
+        new StaffHomeController(staffHomePnl, db);
+        new ClientHomeController(clientHomePnl, db);
 
         JPanel content = frame.getContent();
         content.setLayout(contentView);
@@ -50,8 +56,5 @@ public class HomeController {
 //            user = null;
             main.showPanel(Panel.LOGIN);
         });
-
-        new AdminHomeController(adminHomePnl, db);
-        new ManagerHomeController(managerHomePnl, db);
     }
 }

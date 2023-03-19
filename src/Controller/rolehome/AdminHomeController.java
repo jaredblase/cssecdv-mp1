@@ -1,5 +1,8 @@
-package Controller;
+package Controller.rolehome;
 
+import Controller.MgmtUserController;
+import Controller.Panel;
+import Controller.SQLite;
 import View.*;
 
 import javax.swing.*;
@@ -20,16 +23,16 @@ public class AdminHomeController {
         content = view.getContent();
         content.setLayout(contentView);
         content.add(new Home("WELCOME ADMIN!", new java.awt.Color(51, 153, 255)), "home");
-        content.add(mgmtUser, Panel.USERS.name());
-        content.add(mgmtHistory, Panel.HISTORY.name());
-        content.add(mgmtLogs, Panel.LOGS.name());
+        content.add(mgmtUser, Controller.Panel.USERS.name());
+        content.add(mgmtHistory, Controller.Panel.HISTORY.name());
+        content.add(mgmtLogs, Controller.Panel.LOGS.name());
 
         view.setUsersBtnListener(this::onUsersAction);
         view.setLogsBtnListener(this::onLogsAction);
     }
 
     private void onUsersAction(ActionEvent e) {
-        contentView.show(content, Panel.USERS.name());
+        contentView.show(content, Controller.Panel.USERS.name());
     }
 
     private void onLogsAction(ActionEvent e) {

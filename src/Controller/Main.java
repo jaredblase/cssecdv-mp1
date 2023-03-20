@@ -11,10 +11,7 @@ import View.Register;
 
 import java.awt.CardLayout;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import javax.swing.JPanel;
 
 
@@ -69,20 +66,27 @@ public class Main {
         sqlite.createProductTable();
         sqlite.createUserTable();
 
+        var products = new Product[] {
+                new Product("Antivirus", 5, 500.0F),
+                new Product("Firewall", 3, 1000.0F),
+                new Product("Scanner", 10, 100.0F)
+        };
+
+        // Add sample products
+        for (Product p : products) {
+            sqlite.addProduct(p);
+        }
+
         // Add sample history
-        sqlite.addHistory("admin", "Antivirus", 1, "2019-04-03 14:30:00.000");
-        sqlite.addHistory("manager", "Firewall", 1, "2019-04-03 14:30:01.000");
-        sqlite.addHistory("staff", "Scanner", 1, "2019-04-03 14:30:02.000");
+        sqlite.addHistory(new History("admin", products[0], 1));
+        sqlite.addHistory(new History("manager", products[1], 1));
+        sqlite.addHistory(new History("staff", products[2], 1));
 
         // Add sample logs
-        sqlite.addLogs("NOTICE", "admin", "User creation successful", new Timestamp(new Date().getTime()).toString());
-        sqlite.addLogs("NOTICE", "manager", "User creation successful", new Timestamp(new Date().getTime()).toString());
-        sqlite.addLogs("NOTICE", "admin", "User creation successful", new Timestamp(new Date().getTime()).toString());
+        sqlite.addLogs("NOTICE", "admin", "User creation successful", null);
+        sqlite.addLogs("NOTICE", "manager", "User creation successful", null);
+        sqlite.addLogs("NOTICE", "admin", "User creation successful", null);
 
-        // Add sample product
-        sqlite.addProduct("Antivirus", 5, 500.0);
-        sqlite.addProduct("Firewall", 3, 1000.0);
-        sqlite.addProduct("Scanner", 10, 100.0);
 
         // Add sample users
         char[] password = {'Q', 'w', 'e', 'r', 't', 'y', '1', '2', '3', '4', '.'};
@@ -98,17 +102,15 @@ public class Main {
             Arrays.fill(password, '0');
         }
 
-        ArrayList<History> histories = sqlite.getHistory();
-        for (History history : histories) {
+        for (History history : sqlite.getHistory()) {
             System.out.println("===== History " + history.getId() + " =====");
             System.out.println(" Username: " + history.getUsername());
             System.out.println(" Name: " + history.getName());
-            System.out.println(" Stock: " + history.getStock());
+            System.out.println(" Stock: " + history.getQuantity());
             System.out.println(" Timestamp: " + history.getTimestamp());
         }
 
-        ArrayList<Logs> logs = sqlite.getLogs();
-        for (Logs log : logs) {
+        for (Logs log : sqlite.getLogs()) {
             System.out.println("===== Logs " + log.getId() + " =====");
             System.out.println(" Username: " + log.getEvent());
             System.out.println(" Password: " + log.getUsername());
@@ -116,16 +118,14 @@ public class Main {
             System.out.println(" Timestamp: " + log.getTimestamp());
         }
 
-        ArrayList<Product> products = sqlite.getProducts();
-        for (Product product : products) {
+        for (Product product : sqlite.getProducts()) {
             System.out.println("===== Product " + product.getId() + " =====");
             System.out.println(" Name: " + product.getName());
             System.out.println(" Stock: " + product.getStock());
             System.out.println(" Price: " + product.getPrice());
         }
 
-        ArrayList<User> users = sqlite.getUsers();
-        for (User user : users) {
+        for (User user : sqlite.getUsers()) {
             System.out.println("===== User " + user.getId() + " =====");
             System.out.println(" Username: " + user.getUsername());
             System.out.println(" Password: " + user.getPassword());

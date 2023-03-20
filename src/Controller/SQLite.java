@@ -28,9 +28,10 @@ public class SQLite {
                 CREATE TABLE IF NOT EXISTS history (
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
                  username TEXT NOT NULL,
-                 name TEXT NOT NULL,
-                 stock INTEGER DEFAULT 0,
-                 timestamp TEXT NOT NULL
+                 `name` TEXT NOT NULL,
+                 price REAL NOT NULL,
+                 quantity INTEGER DEFAULT 0,
+                 `timestamp` TEXT NOT NULL
                 );""";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -48,8 +49,8 @@ public class SQLite {
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
                  event TEXT NOT NULL,
                  username TEXT NOT NULL,
-                 desc TEXT NOT NULL,
-                 timestamp TEXT NOT NULL
+                 `desc` TEXT NOT NULL,
+                 `timestamp` TEXT NOT NULL
                 );""";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -65,7 +66,7 @@ public class SQLite {
         String sql = """
                 CREATE TABLE IF NOT EXISTS product (
                  id INTEGER PRIMARY KEY AUTOINCREMENT,
-                 name TEXT NOT NULL UNIQUE,
+                 `name` TEXT NOT NULL UNIQUE,
                  stock INTEGER DEFAULT 0,
                  price REAL DEFAULT 0.00
                 );""";
@@ -146,15 +147,16 @@ public class SQLite {
         }
     }
 
-    public void addHistory(String username, String name, int stock, String timestamp) {
-        String sql = "INSERT INTO history(username,`name`,stock,`timestamp`) VALUES(?,?,?,?)";
+    public void addHistory(History history) {
+        String sql = "INSERT INTO history(username,`name`,quantity,price,`timestamp`) VALUES(?,?,?,?,?)";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, username);
-            stmt.setString(2, name);
-            stmt.setInt(3, stock);
-            stmt.setString(4, timestamp);
+            stmt.setString(1, history.getUsername());
+            stmt.setString(2, history.getName());
+            stmt.setInt(3, history.getQuantity());
+            stmt.setDouble(4, history.getPrice());
+            stmt.setString(5, history.getTimestamp().toString());
             stmt.executeUpdate();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -180,14 +182,14 @@ public class SQLite {
         addLogs("NOTICE", user.getUsername(), desc, timestamp);
     }
 
-    public void addProduct(String name, int stock, double price) {
+    public void addProduct(Product product) {
         String sql = "INSERT INTO product(`name`,stock,price) VALUES(?,?,?)";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, name);
-            stmt.setInt(2, stock);
-            stmt.setDouble(3, price);
+            stmt.setString(1, product.getName());
+            stmt.setInt(2, product.getStock());
+            stmt.setDouble(3, product.getPrice());
             stmt.executeUpdate();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -231,7 +233,7 @@ public class SQLite {
     }
 
     public ArrayList<History> getHistory() {
-        String sql = "SELECT id, username, `name`, stock, `timestamp` FROM history";
+        String sql = "SELECT * FROM history";
         ArrayList<History> histories = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -242,7 +244,8 @@ public class SQLite {
                 histories.add(new History(rs.getInt("id"),
                         rs.getString("username"),
                         rs.getString("name"),
-                        rs.getInt("stock"),
+                        rs.getInt("quantity"),
+                        rs.getFloat("price"),
                         rs.getString("timestamp")));
             }
         } catch (Exception ex) {

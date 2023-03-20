@@ -1,6 +1,7 @@
 package Controller.rolehome;
 
-import Controller.MgmtUserController;
+import Controller.tables.MgmtLogsController;
+import Controller.tables.MgmtUserController;
 import Controller.Panel;
 import Controller.SQLite;
 import View.*;
@@ -14,11 +15,12 @@ public class AdminHomeController {
     private final JPanel content;
 
     public AdminHomeController(AdminHome view, SQLite db) {
-        MgmtHistory mgmtHistory = new MgmtHistory(db);
-        MgmtLogs mgmtLogs = new MgmtLogs(db);
+        MgmtHistory mgmtHistory = new MgmtHistory();
+        MgmtLogs mgmtLogs = new MgmtLogs();
         MgmtUser mgmtUser = new MgmtUser();
 
         new MgmtUserController(mgmtUser, db);
+        new MgmtLogsController(mgmtLogs, db);
 
         content = view.getContent();
         content.setLayout(contentView);

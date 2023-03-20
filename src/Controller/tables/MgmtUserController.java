@@ -1,5 +1,6 @@
-package Controller;
+package Controller.tables;
 
+import Controller.SQLite;
 import Model.PasswordException;
 import Model.User;
 import Model.UsernameException;
@@ -18,11 +19,11 @@ public class MgmtUserController {
         this.view = view;
         this.db = db;
 
-        view.setShowTableListener(this::onShowTable);
+        view.setShowTableListener(this::resetTable);
         view.setChangePasswordListener(this::onChangePassword);
     }
     
-    private void onShowTable() {
+    private void resetTable() {
         view.clearTableData();
         view.setTableData(db.getUsers());
     }

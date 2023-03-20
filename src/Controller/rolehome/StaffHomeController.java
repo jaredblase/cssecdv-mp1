@@ -1,6 +1,6 @@
 package Controller.rolehome;
 
-import Controller.MgmtProductController;
+import Controller.tables.MgmtProductController;
 import Controller.SQLite;
 import View.Home;
 import View.MgmtProduct;

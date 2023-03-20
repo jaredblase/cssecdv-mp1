@@ -1,5 +1,6 @@
-package Controller;
+package Controller.tables;
 
+import Controller.SQLite;
 import View.MgmtProduct;
 
 public class MgmtProductController {
@@ -10,10 +11,10 @@ public class MgmtProductController {
         this.view = view;
         this.db = db;
 
-        view.setShowTableListener(this::onShowTable);
+        view.setShowTableListener(this::resetTable);
     }
 
-    public void onShowTable() {
+    public void resetTable() {
         view.clearTableData();
         view.setTableData(db.getProducts());
     }

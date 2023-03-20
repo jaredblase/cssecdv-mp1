@@ -1,6 +1,6 @@
 package Controller.rolehome;
 
-import Controller.MgmtProductController;
+import Controller.tables.MgmtProductController;
 import Controller.Panel;
 import Controller.SQLite;
 import View.*;
@@ -14,7 +14,7 @@ public class ManagerHomeController {
     private final JPanel content;
 
     public ManagerHomeController(ManagerHome view, SQLite db) {
-        MgmtHistory mgmtHistory = new MgmtHistory(db);
+        MgmtHistory mgmtHistory = new MgmtHistory();
         MgmtProduct mgmtProduct = new MgmtProduct();
 
         new MgmtProductController(mgmtProduct, db);

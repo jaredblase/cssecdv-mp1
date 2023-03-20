@@ -5,10 +5,10 @@
  */
 package View;
 
-import Controller.SQLite;
 import Model.History;
-import Model.Product;
-import java.util.ArrayList;
+
+import java.awt.event.ActionListener;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -18,13 +18,14 @@ import javax.swing.table.DefaultTableModel;
  * @author beepxD
  */
 public class MgmtHistory extends javax.swing.JPanel {
+    private ShowComponentListener showTableListener;
+    private ActionListener reloadListener;
+    private FilterListener filterListener;
+    private final DefaultTableModel tableModel;
 
-    public SQLite sqlite;
-    public DefaultTableModel tableModel;
-    
-    public MgmtHistory(SQLite sqlite) {
+    public MgmtHistory() {
         initComponents();
-        this.sqlite = sqlite;
+
         tableModel = (DefaultTableModel)table.getModel();
         table.getTableHeader().setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
         javax.swing.table.DefaultTableCellRenderer rightAlign = new javax.swing.table.DefaultTableCellRenderer();
@@ -39,23 +40,19 @@ public class MgmtHistory extends javax.swing.JPanel {
 //        reportBtn.setVisible(false);
     }
 
-    public void init(){
-//      CLEAR TABLE
-        for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
-            tableModel.removeRow(0);
-        }
-        
-//      LOAD CONTENTS
-        ArrayList<History> history = sqlite.getHistory();
-        for(int nCtr = 0; nCtr < history.size(); nCtr++){
-            Product product = sqlite.getProductById(history.get(nCtr).getName());
+    public void clearTableData() {
+        tableModel.setRowCount(0);
+    }
+
+    public void setTableData(List<History> products) {
+        for (History history : products) {
             tableModel.addRow(new Object[]{
-                history.get(nCtr).getUsername(), 
-                history.get(nCtr).getName(), 
-                history.get(nCtr).getStock(), 
-                product.getPrice(), 
-                product.getPrice() * history.get(nCtr).getStock(), 
-                history.get(nCtr).getTimestamp()
+                    history.getUsername(),
+                    history.getName(),
+                    history.getQuantity(),
+                    history.getPrice(),
+                    history.getQuantity() * history.getPrice(),
+                    history.getTimestamp()
             });
         }
     }
@@ -103,6 +100,15 @@ public class MgmtHistory extends javax.swing.JPanel {
         });
         table.setRowHeight(24);
         table.getTableHeader().setReorderingAllowed(false);
+        table.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                tableAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
         jScrollPane1.setViewportView(table);
         if (table.getColumnModel().getColumnCount() > 0) {
             table.getColumnModel().getColumn(0).setPreferredWidth(160);
@@ -113,7 +119,6 @@ public class MgmtHistory extends javax.swing.JPanel {
             table.getColumnModel().getColumn(5).setPreferredWidth(240);
         }
 
-        searchBtn.setBackground(new java.awt.Color(255, 255, 255));
         searchBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         searchBtn.setText("SEARCH USERNAME OR PRODUCT");
         searchBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -122,7 +127,6 @@ public class MgmtHistory extends javax.swing.JPanel {
             }
         });
 
-        reloadBtn.setBackground(new java.awt.Color(255, 255, 255));
         reloadBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         reloadBtn.setText("RELOAD");
         reloadBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -167,38 +171,34 @@ public class MgmtHistory extends javax.swing.JPanel {
 
         int result = JOptionPane.showConfirmDialog(null, message, "SEARCH HISTORY", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
-        if (result == JOptionPane.OK_OPTION) {
-//          CLEAR TABLE
-            for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
-                tableModel.removeRow(0);
-            }
-
-//          LOAD CONTENTS
-            ArrayList<History> history = sqlite.getHistory();
-            for(int nCtr = 0; nCtr < history.size(); nCtr++){
-                if(searchFld.getText().contains(history.get(nCtr).getUsername()) || 
-                   history.get(nCtr).getUsername().contains(searchFld.getText()) || 
-                   searchFld.getText().contains(history.get(nCtr).getName()) || 
-                   history.get(nCtr).getName().contains(searchFld.getText())){
-                
-                    Product product = sqlite.getProductById(history.get(nCtr).getName());
-                    tableModel.addRow(new Object[]{
-                        history.get(nCtr).getUsername(), 
-                        history.get(nCtr).getName(), 
-                        history.get(nCtr).getStock(), 
-                        product.getPrice(), 
-                        product.getPrice() * history.get(nCtr).getStock(), 
-                        history.get(nCtr).getTimestamp()
-                    });
-                }
-            }
+        if (result == JOptionPane.OK_OPTION && filterListener != null) {
+            filterListener.onFilter(searchFld.getText());
         }
     }//GEN-LAST:event_searchBtnActionPerformed
 
     private void reloadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reloadBtnActionPerformed
-        init();
+        if (reloadListener != null) {
+            reloadListener.actionPerformed(evt);
+        }
     }//GEN-LAST:event_reloadBtnActionPerformed
 
+    private void tableAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tableAncestorAdded
+        if (showTableListener != null) {
+            showTableListener.onShow();
+        }
+    }//GEN-LAST:event_tableAncestorAdded
+
+    public void setShowTableListener(ShowComponentListener showTableListener) {
+        this.showTableListener = showTableListener;
+    }
+
+    public void setReloadListener(ActionListener reloadListener) {
+        this.reloadListener = reloadListener;
+    }
+
+    public void setFilterListener(FilterListener filterListener) {
+        this.filterListener = filterListener;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
@@ -206,4 +206,8 @@ public class MgmtHistory extends javax.swing.JPanel {
     private javax.swing.JButton searchBtn;
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
+
+    public interface FilterListener {
+        void onFilter(String text);
+    }
 }

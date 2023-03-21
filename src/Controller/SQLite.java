@@ -96,6 +96,22 @@ public class SQLite {
         }
     }
 
+    public void createSessionsTable() {
+        String sql = """
+                CREATE TABLE IF NOT EXISTS sessions (
+                 id TEXT PRIMARY KEY,
+                 username TEXT NOT NULL
+                );""";
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Table sessions in database.db created.");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void dropHistoryTable() {
         String sql = "DROP TABLE IF EXISTS history;";
 
@@ -139,6 +155,18 @@ public class SQLite {
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
             System.out.println("Table users in database.db dropped.");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void dropSessionsTable() {
+        String sql = "DROP TABLE IF EXISTS sessions;";
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Table sessions in database.db dropped.");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -222,6 +250,17 @@ public class SQLite {
         }
     }
 
+    public void addSession(String sessId, String username) throws SQLException {
+        String sql = "INSERT INTO sessions(id, username) VALUES(?,?)";
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, sessId);
+            stmt.setString(2, username);
+            stmt.executeUpdate();
+        }
+    }
+
     public void saveUserAttempts(User u) {
         String sql = "UPDATE users SET attempts=? WHERE username=?";
 
@@ -259,7 +298,7 @@ public class SQLite {
         }
     }
 
-    public void toggleUserLockByUsername(String username) throws SQLException{
+    public void toggleUserLockByUsername(String username) throws SQLException {
         String sql = "UPDATE users SET attempts = (CASE attempts WHEN 0 THEN 200 ELSE 0 END) WHERE username=?";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -314,6 +353,29 @@ public class SQLite {
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
+            while (rs.next()) {
+                histories.add(new History(rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("name"),
+                        rs.getInt("quantity"),
+                        rs.getFloat("price"),
+                        rs.getString("timestamp")));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return histories;
+    }
+
+    public ArrayList<History> getUserHistoryByUsername(String username) {
+        String sql = "SELECT * FROM history WHERE username = ?";
+        ArrayList<History> histories = new ArrayList<>();
+
+        try (var conn = DriverManager.getConnection(driverURL);
+             var stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, username);
+            var rs = stmt.executeQuery();
             while (rs.next()) {
                 histories.add(new History(rs.getInt("id"),
                         rs.getString("username"),
@@ -388,6 +450,19 @@ public class SQLite {
             ex.printStackTrace();
         }
         return users;
+    }
+
+    public User getUserBySessionId(String sessId) throws SQLException {
+        String sql = "SELECT username FROM sessions WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, sessId);
+            ResultSet rs = stmt.executeQuery();
+
+            return rs.next() ? getUserByUsername(rs.getString("username")) : null;
+        }
     }
 
     public User getUserByUsername(String username) throws SQLException {

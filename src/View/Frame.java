@@ -25,11 +25,11 @@ public class Frame extends javax.swing.JFrame {
         HomePnl = new javax.swing.JPanel();
         content = content;
         javax.swing.JPanel Navigation = new javax.swing.JPanel();
-        javax.swing.JButton adminBtn = new javax.swing.JButton();
+        adminBtn = new javax.swing.JButton();
         final javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
-        javax.swing.JButton managerBtn = new javax.swing.JButton();
-        javax.swing.JButton staffBtn = new javax.swing.JButton();
-        javax.swing.JButton clientBtn = new javax.swing.JButton();
+        managerBtn = new javax.swing.JButton();
+        staffBtn = new javax.swing.JButton();
+        clientBtn = new javax.swing.JButton();
         final javax.swing.JButton logoutBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -242,13 +242,33 @@ public class Frame extends javax.swing.JFrame {
         this.logoutActionListener = logoutActionListener;
     }
 
+    public void setAdminVisible(boolean visible) {
+        adminBtn.setVisible(visible);
+    }
+
+    public void setManagerVisible(boolean visible) {
+        managerBtn.setVisible(visible);
+    }
+
+    public void setStaffVisible(boolean visible) {
+        staffBtn.setVisible(visible);
+    }
+
+    public void setClientVisible(boolean visible) {
+        clientBtn.setVisible(visible);
+    }
+
     public JPanel getContent() {
         return this.content;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel HomePnl;
+    private javax.swing.JButton adminBtn;
+    private javax.swing.JButton clientBtn;
     private javax.swing.JPanel container;
     private javax.swing.JPanel content;
+    private javax.swing.JButton managerBtn;
+    private javax.swing.JButton staffBtn;
     // End of variables declaration//GEN-END:variables
 }

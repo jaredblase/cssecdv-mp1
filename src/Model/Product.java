@@ -9,23 +9,20 @@ package Model;
  * @author beepxD
  */
 public class Product {
-
     private int id;
     private String name;
     private int stock;
     private float price;
 
-    public Product(String name, int stock, float price) {
-        this.name = name;
-        this.stock = stock;
-        this.price = price;
+    public Product(String name, int stock, float price) throws Exception {
+        this.setName(name);
+        this.setStock(stock);
+        this.setPrice(price);
     }
 
-    public Product(int id, String name, int stock, float price) {
+    public Product(int id, String name, int stock, float price) throws Exception {
+        this(name, stock, price);
         this.id = id;
-        this.name = name;
-        this.stock = stock;
-        this.price = price;
     }
 
     public int getId() {
@@ -36,15 +33,21 @@ public class Product {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String name) throws Exception {
+        if (name.length() == 0) {
+            throw new Exception("Product name cannot be blank.");
+        }
+        this.name = name.toUpperCase();
     }
 
     public int getStock() {
         return stock;
     }
 
-    public void setStock(int stock) {
+    public void setStock(int stock) throws Exception {
+        if (stock < 0) {
+            throw new Exception("Stocks cannot be a negative number.");
+        }
         this.stock = stock;
     }
 
@@ -52,7 +55,10 @@ public class Product {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(float price) throws Exception {
+        if (price < 0) {
+            throw new Exception("Price must be a positive decimal number.");
+        }
         this.price = price;
     }
 }

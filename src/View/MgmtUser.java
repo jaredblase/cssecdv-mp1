@@ -6,8 +6,8 @@
 package View;
 
 import Model.User;
+import View.components.Modal;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.*;
@@ -17,21 +17,13 @@ public class MgmtUser extends javax.swing.JPanel {
     public DefaultTableModel tableModel;
     private ChangePasswordListener changePasswordListener;
     private ShowComponentListener showTableListener;
-    private final JLabel errorLbl = new JLabel("");
-    final JOptionPane optionPane = new JOptionPane();
-    private final JDialog dialog;
+    private final Modal modal;
 
     public MgmtUser() {
         initComponents();
         tableModel = (DefaultTableModel) table.getModel();
         table.getTableHeader().setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
-
-        errorLbl.setFont(new Font("Tahoma", Font.BOLD, 12));
-        errorLbl.setForeground(Color.RED);
-        errorLbl.setHorizontalAlignment(SwingConstants.CENTER);
-
-        dialog = new JDialog(SwingUtilities.getWindowAncestor(this));
-        dialog.setContentPane(optionPane);
+        modal = new Modal(this);
     }
 
     public void clearTableData() {
@@ -64,14 +56,6 @@ public class MgmtUser extends javax.swing.JPanel {
 
     public String getUsernameAt(int idx) {
         return (String) table.getModel().getValueAt(idx, 0);
-    }
-
-    public void designer(JTextField component, String text) {
-        component.setSize(70, 600);
-        component.setFont(new java.awt.Font("Tahoma", Font.PLAIN, 18));
-        component.setBackground(new java.awt.Color(240, 240, 240));
-        component.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        component.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), text, javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12)));
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -237,29 +221,12 @@ public class MgmtUser extends javax.swing.JPanel {
         final JPasswordField passwordFld = new JPasswordField();
         final JPasswordField confFld = new JPasswordField();
 
-        designer(passwordFld, "PASSWORD");
-        designer(confFld, "CONFIRM PASSWORD");
-        errorLbl.setText("");
-        errorLbl.setPreferredSize(new Dimension(200, 30));
-        Object[] message = {"Enter New Password:", passwordFld, confFld, errorLbl};
+        Modal.design(passwordFld, "PASSWORD");
+        Modal.design(confFld, "CONFIRM PASSWORD");
 
-        dialog.setTitle("CHANGE PASSWORD");
-        optionPane.setValue(JOptionPane.UNINITIALIZED_VALUE);
-        optionPane.setMessage(message);
-        optionPane.setMessageType(JOptionPane.PLAIN_MESSAGE);
-        optionPane.setOptionType(JOptionPane.OK_CANCEL_OPTION);
-
-        optionPane.addPropertyChangeListener(e -> {
-            String prop = e.getPropertyName();
-            if (!dialog.isVisible() || e.getSource() != optionPane || !prop.equals(JOptionPane.VALUE_PROPERTY) ||
-                    e.getNewValue().equals(JOptionPane.UNINITIALIZED_VALUE)) return;
-
-            int value = (Integer) e.getNewValue();
-            if (value == JOptionPane.CANCEL_OPTION) {
-                dialog.setVisible(false);
-                return;
-            }
-
+        modal.setup("CHANGE PASSWORD", JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+        modal.addMessages("Enter New Password:", passwordFld, confFld);
+        modal.setCallback(() -> {
             char[] password = passwordFld.getPassword();
             char[] confirm = confFld.getPassword();
 
@@ -268,12 +235,7 @@ public class MgmtUser extends javax.swing.JPanel {
             Arrays.fill(password, '0');
             Arrays.fill(confirm, '0');
         });
-
-        dialog.pack();
-        var d = dialog.getPreferredSize();
-        dialog.setMinimumSize(new Dimension(d.width + 50, d.height));
-        dialog.setLocationRelativeTo(dialog.getOwner());
-        dialog.setVisible(true);
+        modal.show();
     }//GEN-LAST:event_chgpassBtnActionPerformed
 
     private void tableAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tableAncestorAdded
@@ -283,13 +245,11 @@ public class MgmtUser extends javax.swing.JPanel {
     }//GEN-LAST:event_tableAncestorAdded
 
     public void setErrorMessage(String text) {
-        // add text wrap behavior
-        errorLbl.setText("<html>" + text + "</html>");
-        optionPane.setValue(JOptionPane.UNINITIALIZED_VALUE);
+        modal.setErrorMessage(text);
     }
 
     public void closeDialog() {
-        dialog.setVisible(false);
+        modal.hide();
     }
 
     public void setChangePasswordListener(ChangePasswordListener changePasswordListener) {

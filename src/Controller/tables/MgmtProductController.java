@@ -2,6 +2,9 @@ package Controller.tables;
 
 import Controller.SQLite;
 import Model.Product;
+import Model.Role;
+import Model.SessionManager;
+import Model.User;
 import View.MgmtProduct;
 
 import java.sql.SQLException;
@@ -24,7 +27,12 @@ public class MgmtProductController {
     private void onPurchase(int index, String quantity) {
         view.setErrorMessage("");
 
-        // TODO: authorize client
+        User user = SessionManager.getUser(db);
+
+        if (user == null || user.getRole() != Role.CLIENT) {
+            SessionManager.logout();
+            return;
+        }
 
         try {
             var qty = Integer.parseInt(quantity);
@@ -34,7 +42,7 @@ public class MgmtProductController {
             }
 
             var productName = view.getProductNameAt(index);
-            db.addPurchase("admin", productName, qty); // TODO: Use user in session.
+            db.addPurchase(user.getUsername(), productName, qty);
             view.closeDialog();
         } catch (NumberFormatException e) {
             view.setErrorMessage("Input must be a positive whole number.");

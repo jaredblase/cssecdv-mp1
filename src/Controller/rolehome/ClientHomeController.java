@@ -1,5 +1,6 @@
 package Controller.rolehome;
 
+import Controller.tables.MgmtHistoryController;
 import Controller.tables.MgmtProductController;
 import Controller.Panel;
 import Controller.SQLite;
@@ -20,6 +21,7 @@ public class ClientHomeController {
         MgmtHistory mgmtHistory = new MgmtHistory();
         MgmtProduct mgmtProduct = new MgmtProduct();
 
+        new MgmtHistoryController(mgmtHistory, db);
         new MgmtProductController(mgmtProduct, db);
 
         content = view.getContent();

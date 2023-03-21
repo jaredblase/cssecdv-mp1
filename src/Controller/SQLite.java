@@ -165,8 +165,6 @@ public class SQLite {
             stmt.setDouble(4, history.getPrice());
             stmt.setString(5, history.getTimestamp().toString());
             stmt.executeUpdate();
-        } catch (Exception e) {
-            throw e;
         }
     }
 
@@ -189,7 +187,7 @@ public class SQLite {
         addLogs("NOTICE", user.getUsername(), desc, timestamp);
     }
 
-    public void addProduct(Product product) {
+    public void addProduct(Product product) throws SQLException {
         String sql = "INSERT INTO product(`name`,stock,price) VALUES(?,?,?)";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -198,21 +196,33 @@ public class SQLite {
             stmt.setInt(2, product.getStock());
             stmt.setDouble(3, product.getPrice());
             stmt.executeUpdate();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        }
+    }
+
+    public void updateProduct(Product product) throws SQLException {
+        var sql = "UPDATE product SET stock = ?, price = ? WHERE `name` = ?";
+
+        try (var conn = DriverManager.getConnection(driverURL);
+             var stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, product.getStock());
+            stmt.setFloat(2, product.getPrice());
+            stmt.setString(3, product.getName());
+            stmt.executeUpdate();
         }
     }
 
     public void addUser(User user) throws SQLException {
         String sql = "INSERT INTO users(username,password,`role`,attempts) VALUES(?,?,?,?)";
 
-        Connection conn = DriverManager.getConnection(driverURL);
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setString(1, user.getUsername());
-        stmt.setString(2, user.getPassword());
-        stmt.setInt(3, user.getRole());
-        stmt.setInt(4, user.getAttempts());
-        stmt.executeUpdate();
+        try (Connection conn = DriverManager.getConnection(driverURL);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getPassword());
+            stmt.setInt(3, user.getRole());
+            stmt.setInt(4, user.getAttempts());
+            stmt.executeUpdate();
+        }
     }
 
     public void saveUserAttempts(User u) {
@@ -407,5 +417,15 @@ public class SQLite {
             ex.printStackTrace();
         }
         return product;
+    }
+
+    public void deleteProductByName(String name) throws SQLException {
+        String sql = "DELETE FROM product WHERE `name` = ?";
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            stmt.executeUpdate();
+        }
     }
 }

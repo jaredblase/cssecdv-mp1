@@ -1,9 +1,6 @@
 package Controller;
 
-import Model.History;
-import Model.Logs;
-import Model.Product;
-import Model.User;
+import Model.*;
 import View.ForgotPassword;
 import View.Frame;
 import View.Login;
@@ -11,6 +8,7 @@ import View.Register;
 
 import java.awt.CardLayout;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import javax.swing.JPanel;
 
@@ -44,6 +42,10 @@ public class Main {
         new HomeController(this, frame, sqlite);
 
         frame.init();
+
+        if (SessionManager.getSessionId() != null) {
+            this.showPanel(Panel.HOME);
+        }
     }
 
     public void showPanel(Panel panel) {
@@ -66,21 +68,29 @@ public class Main {
         sqlite.createProductTable();
         sqlite.createUserTable();
 
-        var products = new Product[] {
-                new Product("Antivirus", 5, 500.0F),
-                new Product("Firewall", 3, 1000.0F),
-                new Product("Scanner", 10, 100.0F)
-        };
+        try {
+            var products = new Product[]{
+                    new Product("Antivirus", 5, 500.0F),
+                    new Product("Firewall", 3, 1000.0F),
+                    new Product("Scanner", 10, 100.0F)
+            };
 
-        // Add sample products
-        for (Product p : products) {
-            sqlite.addProduct(p);
+            try {
+                // Add sample products
+                for (Product p : products) {
+                    sqlite.addProduct(p);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            // Add sample history
+            sqlite.addHistory(new History("admin", products[0], 1));
+            sqlite.addHistory(new History("manager", products[1], 1));
+            sqlite.addHistory(new History("staff", products[2], 1));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        // Add sample history
-        sqlite.addHistory(new History("admin", products[0], 1));
-        sqlite.addHistory(new History("manager", products[1], 1));
-        sqlite.addHistory(new History("staff", products[2], 1));
 
         // Add sample logs
         sqlite.addLogs("NOTICE", "admin", "User creation successful", null);

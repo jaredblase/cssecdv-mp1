@@ -21,9 +21,9 @@ public class MgmtProduct extends javax.swing.JPanel {
     private final DefaultTableModel tableModel;
     private ShowComponentListener showTableListener;
     private PurchaseListener purchaseListener;
-    private ActionListener addListener;
-    private ActionListener deleteListener;
-    private ActionListener editListener;
+    private AddProductListener addListener;
+    private EditProductListener editListener;
+    private DeleteProductListener deleteListener;
     private final Modal modal;
 
     public MgmtProduct() {
@@ -58,26 +58,6 @@ public class MgmtProduct extends javax.swing.JPanel {
         return (String) table.getModel().getValueAt(idx, 0);
     }
 
-    public void setTableData(Product product, int index) {
-        var data = new Object[]{
-                product.getName(),
-                product.getStock(),
-                product.getPrice()
-        };
-
-        for (int i = 0; i < data.length; i++) {
-            tableModel.setValueAt(data[i], index, i);
-        }
-    }
-
-    public void designer(JTextField component, String text) {
-        component.setSize(70, 600);
-        component.setFont(new java.awt.Font("Tahoma", 0, 18));
-        component.setBackground(new java.awt.Color(240, 240, 240));
-        component.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        component.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), text, javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12)));
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -95,22 +75,22 @@ public class MgmtProduct extends javax.swing.JPanel {
 
         table.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         table.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "Name", "Stock", "Price"
-            }
+                new Object[][]{
+                        {null, null, null},
+                        {null, null, null},
+                        {null, null, null},
+                        {null, null, null}
+                },
+                new String[]{
+                        "Name", "Stock", "Price"
+                }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
+            boolean[] canEdit = new boolean[]{
+                    false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         table.setRowHeight(24);
@@ -119,8 +99,10 @@ public class MgmtProduct extends javax.swing.JPanel {
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
                 tableAncestorAdded(evt);
             }
+
             public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
             }
+
             public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
             }
         });
@@ -167,32 +149,32 @@ public class MgmtProduct extends javax.swing.JPanel {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(purchaseBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(addBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(editBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(deleteBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1))
-                .addGap(0, 0, 0))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, 0)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(purchaseBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGap(0, 0, 0)
+                                                .addComponent(addBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGap(0, 0, 0)
+                                                .addComponent(editBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGap(0, 0, 0)
+                                                .addComponent(deleteBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(jScrollPane1))
+                                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
-                .addGap(0, 0, 0)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(deleteBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(purchaseBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(editBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, 0)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
+                                .addGap(0, 0, 0)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(deleteBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(addBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(purchaseBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(editBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -207,7 +189,9 @@ public class MgmtProduct extends javax.swing.JPanel {
         var productName = tableModel.getValueAt(rowIdx, 0).toString();
         modal.addMessages("How many " + productName + " do you want to purchase?", qtyField);
         modal.setCallback(() -> {
-            purchaseListener.onPurchase(rowIdx, qtyField.getText());
+            if (purchaseListener != null) {
+                purchaseListener.onPurchase(rowIdx, qtyField.getText());
+            }
         });
         modal.show();
     }//GEN-LAST:event_purchaseBtnActionPerformed
@@ -217,54 +201,49 @@ public class MgmtProduct extends javax.swing.JPanel {
         JTextField stockFld = new JTextField();
         JTextField priceFld = new JTextField();
 
-        designer(nameFld, "PRODUCT NAME");
-        designer(stockFld, "PRODUCT STOCK");
-        designer(priceFld, "PRODUCT PRICE");
+        Modal.design(nameFld, "PRODUCT NAME");
+        Modal.design(stockFld, "PRODUCT STOCK");
+        Modal.design(priceFld, "PRODUCT PRICE");
 
-        Object[] message = {
-                "Insert New Product Details:", nameFld, stockFld, priceFld
-        };
-
-        int result = JOptionPane.showConfirmDialog(null, message, "ADD PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-
-        if (result == JOptionPane.OK_OPTION) {
-            System.out.println(nameFld.getText());
-            System.out.println(stockFld.getText());
-            System.out.println(priceFld.getText());
-        }
+        modal.setup("ADD PRODUCT", JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+        modal.addMessages("Insert New Product Details:", nameFld, stockFld, priceFld);
+        modal.setCallback(() -> {
+            if (addListener != null) {
+                addListener.onAdd(nameFld.getText(), stockFld.getText(), priceFld.getText());
+            }
+        });
+        modal.show();
     }//GEN-LAST:event_addBtnActionPerformed
 
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
-        if (table.getSelectedRow() >= 0) {
-            JTextField nameFld = new JTextField(tableModel.getValueAt(table.getSelectedRow(), 0) + "");
-            JTextField stockFld = new JTextField(tableModel.getValueAt(table.getSelectedRow(), 1) + "");
-            JTextField priceFld = new JTextField(tableModel.getValueAt(table.getSelectedRow(), 2) + "");
+        int rowIdx = table.getSelectedRow();
+        if (rowIdx < 0) return;
 
-            designer(nameFld, "PRODUCT NAME");
-            designer(stockFld, "PRODUCT STOCK");
-            designer(priceFld, "PRODUCT PRICE");
+        JTextField stockFld = new JTextField(tableModel.getValueAt(rowIdx, 1) + "");
+        JTextField priceFld = new JTextField(tableModel.getValueAt(rowIdx, 2) + "");
 
-            Object[] message = {
-                    "Edit Product Details:", nameFld, stockFld, priceFld
-            };
+        Modal.design(stockFld, "PRODUCT STOCK");
+        Modal.design(priceFld, "PRODUCT PRICE");
 
-            int result = JOptionPane.showConfirmDialog(null, message, "EDIT PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
-            if (result == JOptionPane.OK_OPTION) {
-                System.out.println(nameFld.getText());
-                System.out.println(stockFld.getText());
-                System.out.println(priceFld.getText());
+        modal.setup("EDIT PRODUCT", JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+        modal.addMessages("Edit product details for " + this.getProductNameAt(rowIdx) + ":", stockFld, priceFld);
+        modal.setCallback(() -> {
+            if (editListener != null) {
+                editListener.onEdit(rowIdx, stockFld.getText(), priceFld.getText());
             }
-        }
+        });
+        modal.show();
     }//GEN-LAST:event_editBtnActionPerformed
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
-        if (table.getSelectedRow() >= 0) {
-            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE PRODUCT", JOptionPane.YES_NO_OPTION);
+        int rowIdx = table.getSelectedRow();
+        if (rowIdx < 0) return;
 
-            if (result == JOptionPane.YES_OPTION) {
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
-            }
+        int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + this.getProductNameAt(rowIdx) + "?", "DELETE PRODUCT", JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION && deleteListener != null) {
+            deleteListener.onDelete(rowIdx);
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
 
@@ -290,11 +269,35 @@ public class MgmtProduct extends javax.swing.JPanel {
         this.purchaseListener = purchaseListener;
     }
 
+    public void setAddListener(AddProductListener addListener) {
+        this.addListener = addListener;
+    }
+
+    public void setEditListener(EditProductListener editListener) {
+        this.editListener = editListener;
+    }
+
+    public void setDeleteListener(DeleteProductListener deleteListener) {
+        this.deleteListener = deleteListener;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 
     public interface PurchaseListener {
         void onPurchase(int index, String quantity);
+    }
+
+    public interface AddProductListener {
+        void onAdd(String name, String stock, String price);
+    }
+
+    public interface EditProductListener {
+        void onEdit(int index, String stock, String price);
+    }
+
+    public interface DeleteProductListener {
+        void onDelete(int index);
     }
 }

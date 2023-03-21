@@ -17,6 +17,22 @@ public class MgmtProductController {
         this.view = view;
         this.db = db;
 
+        User user = SessionManager.getUser(db);
+
+        if (user == null) {
+            SessionManager.logout();
+            return;
+        }
+
+        if (user.getRole() == Role.MANAGER || user.getRole() == Role.STAFF) {
+            view.setAdminControlVisible(true);
+        } else if (user.getRole() == Role.CLIENT) {
+            view.setAdminControlVisible(false);
+        } else {
+            SessionManager.logout();
+            return;
+        }
+
         view.setShowTableListener(this::resetTable);
         view.setPurchaseListener(this::onPurchase);
         view.setAddListener(this::onAdd);

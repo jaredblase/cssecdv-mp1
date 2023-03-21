@@ -6,22 +6,22 @@ public class User {
     private int id;
     private String username;
     private String password;
-    private int role;
+    private Role role;
     private int attempts;
     public final static int MAX_ATTEMPTS = 3;
 
     public User(String username, char[] password) throws UsernameException, PasswordException {
-        this(username, password, 2);
+        this(username, password, Role.CLIENT);
     }
 
-    public User(String username, char[] password, int role) throws UsernameException, PasswordException {
+    public User(String username, char[] password, Role role) throws UsernameException, PasswordException {
         this(username, password, role, 0);
     }
 
-    public User(String username, char[] password, int role, int attempts) throws UsernameException, PasswordException {
+    public User(String username, char[] password, Role role, int attempts) throws UsernameException, PasswordException {
         this.setUsername(username);
         this.setPassword(password);
-        this.role = role;
+        this.setRole(role);
         this.attempts = attempts;
     }
 
@@ -29,7 +29,7 @@ public class User {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.role = role;
+        this.setRole(role);
         this.attempts = attempts;
     }
 
@@ -70,11 +70,15 @@ public class User {
         this.password = hashPassword(password);
     }
 
-    public int getRole() {
+    public Role getRole() {
         return role;
     }
 
     public void setRole(int role) {
+        this.role = Role.valueOf(role);
+    }
+
+    public void setRole(Role role) {
         this.role = role;
     }
 

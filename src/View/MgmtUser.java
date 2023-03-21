@@ -17,6 +17,9 @@ public class MgmtUser extends javax.swing.JPanel {
     public DefaultTableModel tableModel;
     private ChangePasswordListener changePasswordListener;
     private ShowComponentListener showTableListener;
+    private IndexActionListener deleteUserListener;
+    private IndexActionListener lockUserListener;
+    private EditUserListener editUserListener;
     private final Modal modal;
 
     public MgmtUser() {
@@ -34,7 +37,7 @@ public class MgmtUser extends javax.swing.JPanel {
         var data = new Object[]{
                 user.getUsername(),
                 user.getPassword(),
-                user.getRole(),
+                user.getRole().getCode(),
                 user.getIsLocked()
         };
 
@@ -48,7 +51,7 @@ public class MgmtUser extends javax.swing.JPanel {
             tableModel.addRow(new Object[]{
                     user.getUsername(),
                     user.getPassword(),
-                    user.getRole(),
+                    user.getRole().getCode(),
                     user.getIsLocked()
             });
         }
@@ -70,22 +73,22 @@ public class MgmtUser extends javax.swing.JPanel {
 
         table.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         table.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Username", "Password", "Role", "Locked"
-            }
+                new Object[][]{
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null},
+                        {null, null, null, null}
+                },
+                new String[]{
+                        "Username", "Password", "Role", "Locked"
+                }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
+            boolean[] canEdit = new boolean[]{
+                    false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         table.setRowHeight(24);
@@ -94,8 +97,10 @@ public class MgmtUser extends javax.swing.JPanel {
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
                 tableAncestorAdded(evt);
             }
+
             public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
             }
+
             public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
             }
         });
@@ -143,74 +148,73 @@ public class MgmtUser extends javax.swing.JPanel {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(editRoleBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(deleteBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(lockBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(chgpassBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1))
-                .addGap(0, 0, 0))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, 0)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(editRoleBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGap(0, 0, 0)
+                                                .addComponent(deleteBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGap(0, 0, 0)
+                                                .addComponent(lockBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGap(0, 0, 0)
+                                                .addComponent(chgpassBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(jScrollPane1))
+                                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
-                .addGap(0, 0, 0)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(chgpassBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(editRoleBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lockBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, 0)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
+                                .addGap(0, 0, 0)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(chgpassBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(editRoleBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lockBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void editRoleBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRoleBtnActionPerformed
-        if (table.getSelectedRow() >= 0) {
-            String[] options = {"1-DISABLED", "2-CLIENT", "3-STAFF", "4-MANAGER", "5-ADMIN"};
-            JComboBox optionList = new JComboBox(options);
+        var idx = table.getSelectedRow();
+        if (idx < 0) return;
 
-            optionList.setSelectedIndex((int) tableModel.getValueAt(table.getSelectedRow(), 2) - 1);
+        String[] options = {"1-DISABLED", "2-CLIENT", "3-STAFF", "4-MANAGER", "5-ADMIN"};
+        JComboBox optionList = new JComboBox(options);
 
-            String result = (String) JOptionPane.showInputDialog(null, "USER: " + tableModel.getValueAt(table.getSelectedRow(), 0),
-                    "EDIT USER ROLE", JOptionPane.QUESTION_MESSAGE, null, options, options[(int) tableModel.getValueAt(table.getSelectedRow(), 2) - 1]);
+        optionList.setSelectedIndex((int) tableModel.getValueAt(table.getSelectedRow(), 2) - 1);
 
-            if (result != null) {
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
-                System.out.println(result.charAt(0));
-            }
+        String result = (String) JOptionPane.showInputDialog(null, "USER: " + getUsernameAt(idx),
+                "EDIT USER ROLE", JOptionPane.QUESTION_MESSAGE, null, options, options[(int) tableModel.getValueAt(idx, 2) - 1]);
+
+        if (result != null && editUserListener != null) {
+            editUserListener.onEdit(idx, result.substring(0, 1));
         }
     }//GEN-LAST:event_editRoleBtnActionPerformed
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
-        if (table.getSelectedRow() >= 0) {
-            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
+        var idx = table.getSelectedRow();
+        if (idx < 0) return;
 
-            if (result == JOptionPane.YES_OPTION) {
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
-            }
+        int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + this.getUsernameAt(idx) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION) {
+            deleteUserListener.onAction(idx);
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void lockBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lockBtnActionPerformed
-        if (table.getSelectedRow() >= 0) {
-            String state = "lock";
-            if ("1".equals(tableModel.getValueAt(table.getSelectedRow(), 3) + "")) {
-                state = "unlock";
-            }
+        var idx = table.getSelectedRow();
+        if (idx < 0) return;
 
-            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to " + state + " " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
+        String state = (boolean) tableModel.getValueAt(idx, 3) ? "unlock" : "lock";
 
-            if (result == JOptionPane.YES_OPTION) {
-                System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
-            }
+        int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to " + state + " " + getUsernameAt(idx) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
+
+        if (result == JOptionPane.YES_OPTION && lockUserListener != null) {
+            lockUserListener.onAction(idx);
         }
     }//GEN-LAST:event_lockBtnActionPerformed
 
@@ -255,9 +259,21 @@ public class MgmtUser extends javax.swing.JPanel {
     public void setChangePasswordListener(ChangePasswordListener changePasswordListener) {
         this.changePasswordListener = changePasswordListener;
     }
-    
+
     public void setShowTableListener(ShowComponentListener showTableListener) {
         this.showTableListener = showTableListener;
+    }
+
+    public void setDeleteUserListener(IndexActionListener deleteUserListener) {
+        this.deleteUserListener = deleteUserListener;
+    }
+
+    public void setLockUserListener(IndexActionListener lockUserListener) {
+        this.lockUserListener = lockUserListener;
+    }
+
+    public void setEditUserListener(EditUserListener editUserListener) {
+        this.editUserListener = editUserListener;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -266,5 +282,13 @@ public class MgmtUser extends javax.swing.JPanel {
 
     public interface ChangePasswordListener {
         void onChangePassword(int idx, char[] password, char[] confirm);
+    }
+
+    public interface IndexActionListener {
+        void onAction(int idx);
+    }
+
+    public interface EditUserListener {
+        void onEdit(int idx, String role);
     }
 }

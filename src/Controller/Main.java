@@ -101,11 +101,11 @@ public class Main {
         // Add sample users
         char[] password = {'Q', 'w', 'e', 'r', 't', 'y', '1', '2', '3', '4', '.'};
         try {
-            sqlite.addUser(new User("admin", password, 5));
-            sqlite.addUser(new User("manager", password, 4));
-            sqlite.addUser(new User("staff", password, 3));
-            sqlite.addUser(new User("client1", password, 2));
-            sqlite.addUser(new User("client2", password, 2));
+            sqlite.addUser(new User("admin", password, Role.ADMINISTRATOR));
+            sqlite.addUser(new User("manager", password, Role.MANAGER));
+            sqlite.addUser(new User("staff", password, Role.STAFF));
+            sqlite.addUser(new User("client1", password, Role.CLIENT));
+            sqlite.addUser(new User("client2", password, Role.CLIENT));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

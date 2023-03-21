@@ -148,18 +148,25 @@ public class SQLite {
     }
 
     public void addHistory(History history) {
+        try (Connection conn = DriverManager.getConnection(driverURL)) {
+            addHistory(conn, history);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void addHistory(Connection conn, History history) throws Exception {
         String sql = "INSERT INTO history(username,`name`,quantity,price,`timestamp`) VALUES(?,?,?,?,?)";
 
-        try (Connection conn = DriverManager.getConnection(driverURL);
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, history.getUsername());
             stmt.setString(2, history.getName());
             stmt.setInt(3, history.getQuantity());
             stmt.setDouble(4, history.getPrice());
             stmt.setString(5, history.getTimestamp().toString());
             stmt.executeUpdate();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            throw e;
         }
     }
 
@@ -167,7 +174,7 @@ public class SQLite {
         String sql = "INSERT INTO logs(event,username,`desc`,`timestamp`) VALUES(?,?,?,?)";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, event);
             stmt.setString(2, username);
             stmt.setString(3, desc);
@@ -229,6 +236,43 @@ public class SQLite {
             stmt.setString(1, u.getPassword());
             stmt.setString(2, u.getUsername());
             stmt.executeUpdate();
+        }
+    }
+
+    public void addPurchase(String username, String productName, int quantity) throws Exception {
+        var prod = this.getProductById(productName);
+
+        if (this.getUserByUsername(username) == null) {
+            throw new Exception("User does not exist.");
+        }
+
+        if (prod == null) {
+            throw new Exception("Product does not exist.");
+        }
+
+        if (prod.getStock() < quantity) {
+            throw new Exception("Quantity input is greater than available stocks.");
+        }
+
+        var sql = "UPDATE product SET stock = stock - ? WHERE `name` = ?";
+
+        try (var conn = DriverManager.getConnection(driverURL)) {
+            try (var stmt = conn.prepareStatement(sql)) {
+                conn.setAutoCommit(false);  // initialize transaction
+
+                stmt.setInt(1, quantity);
+                stmt.setString(2, productName);
+                stmt.executeUpdate();
+
+                this.addHistory(conn, new History(username, prod, quantity));
+
+                conn.commit();
+            } catch (Exception ex) {
+                conn.rollback();
+                ex.printStackTrace();
+            } finally {
+                conn.setAutoCommit(true);
+            }
         }
     }
 
@@ -320,7 +364,7 @@ public class SQLite {
         String sql = "SELECT id, username, password, role, attempts FROM users WHERE username = ?";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
 

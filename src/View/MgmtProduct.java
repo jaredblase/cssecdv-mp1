@@ -6,6 +6,9 @@
 package View;
 
 import Model.Product;
+import View.components.Modal;
+
+import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -15,14 +18,20 @@ import javax.swing.table.DefaultTableModel;
  * @author beepxD
  */
 public class MgmtProduct extends javax.swing.JPanel {
-
     private final DefaultTableModel tableModel;
     private ShowComponentListener showTableListener;
+    private PurchaseListener purchaseListener;
+    private ActionListener addListener;
+    private ActionListener deleteListener;
+    private ActionListener editListener;
+    private final Modal modal;
 
     public MgmtProduct() {
         initComponents();
         tableModel = (DefaultTableModel) table.getModel();
         table.getTableHeader().setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
+
+        modal = new Modal(this);
 
 //        UNCOMMENT TO DISABLE BUTTONS
 //        purchaseBtn.setVisible(false);
@@ -43,6 +52,10 @@ public class MgmtProduct extends javax.swing.JPanel {
                     product.getPrice()
             });
         }
+    }
+
+    public String getProductNameAt(int idx) {
+        return (String) table.getModel().getValueAt(idx, 0);
     }
 
     public void setTableData(Product product, int index) {
@@ -73,12 +86,12 @@ public class MgmtProduct extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
+        final javax.swing.JScrollPane jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
-        purchaseBtn = new javax.swing.JButton();
-        addBtn = new javax.swing.JButton();
-        editBtn = new javax.swing.JButton();
-        deleteBtn = new javax.swing.JButton();
+        final javax.swing.JButton purchaseBtn = new javax.swing.JButton();
+        final javax.swing.JButton addBtn = new javax.swing.JButton();
+        final javax.swing.JButton editBtn = new javax.swing.JButton();
+        final javax.swing.JButton deleteBtn = new javax.swing.JButton();
 
         table.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         table.setModel(new javax.swing.table.DefaultTableModel(
@@ -184,20 +197,19 @@ public class MgmtProduct extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void purchaseBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseBtnActionPerformed
-        if (table.getSelectedRow() >= 0) {
-            JTextField stockFld = new JTextField("0");
-            designer(stockFld, "PRODUCT STOCK");
+        int rowIdx = table.getSelectedRow();
+        if (rowIdx < 0) return;
 
-            Object[] message = {
-                    "How many " + tableModel.getValueAt(table.getSelectedRow(), 0) + " do you want to purchase?", stockFld
-            };
+        final JTextField qtyField = new JTextField("0");
+        Modal.design(qtyField, "PRODUCT STOCK");
+        modal.setup("PURCHASE PRODUCT", JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
 
-            int result = JOptionPane.showConfirmDialog(null, message, "PURCHASE PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-
-            if (result == JOptionPane.OK_OPTION) {
-                System.out.println(stockFld.getText());
-            }
-        }
+        var productName = tableModel.getValueAt(rowIdx, 0).toString();
+        modal.addMessages("How many " + productName + " do you want to purchase?", qtyField);
+        modal.setCallback(() -> {
+            purchaseListener.onPurchase(rowIdx, qtyField.getText());
+        });
+        modal.show();
     }//GEN-LAST:event_purchaseBtnActionPerformed
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
@@ -266,12 +278,23 @@ public class MgmtProduct extends javax.swing.JPanel {
         this.showTableListener = showTableListener;
     }
 
+    public void setErrorMessage(String text) {
+        modal.setErrorMessage(text);
+    }
+
+    public void closeDialog() {
+        modal.hide();
+    }
+
+    public void setPurchaseListener(PurchaseListener purchaseListener) {
+        this.purchaseListener = purchaseListener;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addBtn;
-    private javax.swing.JButton deleteBtn;
-    private javax.swing.JButton editBtn;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton purchaseBtn;
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
+
+    public interface PurchaseListener {
+        void onPurchase(int index, String quantity);
+    }
 }

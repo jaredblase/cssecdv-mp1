@@ -1,17 +1,16 @@
 package Controller;
 
+import Model.SessionManager;
 import Model.User;
 import View.Login;
 
 public class LoginController {
     private final Login loginView;
-    private final Main main;
     private final SQLite db;
 
     public LoginController(Main main, Login loginView, SQLite db) {
         this.loginView = loginView;
         this.db = db;
-        this.main = main;
 
         loginView.setRegisterListener(e -> main.showPanel(Panel.REGISTER));
         loginView.setForgotPassword(e -> main.showPanel(Panel.FORGOT_PASSWORD));
@@ -51,8 +50,8 @@ public class LoginController {
             user.clearAttempts();
             db.saveUserAttempts(user);
             db.addUserEventLog(user, "User login successful", null);
-//            main.setUser(user);
-            main.showPanel(Panel.HOME);
+
+            SessionManager.login(db, username);
         } catch (Exception e) {
             loginView.setErrorMessage("A problem occurred on our side. Please try again later.");
         }

@@ -41,11 +41,10 @@ public class Main {
         new ForgotPasswordController(this, forgotPasswordPnl);
         new HomeController(this, frame, sqlite);
 
-        frame.init();
+        SessionManager.setLoginListener(() -> new HomeController(this, frame, sqlite));
+        SessionManager.setLogoutListener(() -> showPanel(Panel.LOGIN));
 
-        if (SessionManager.getSessionId() != null) {
-            this.showPanel(Panel.HOME);
-        }
+        frame.init();
     }
 
     public void showPanel(Panel panel) {
@@ -61,12 +60,14 @@ public class Main {
         sqlite.dropLogsTable();
         sqlite.dropProductTable();
         sqlite.dropUserTable();
+        sqlite.dropSessionsTable();
 
         // Create users table if not exist
         sqlite.createHistoryTable();
         sqlite.createLogsTable();
         sqlite.createProductTable();
         sqlite.createUserTable();
+        sqlite.createSessionsTable();
 
         try {
             var products = new Product[]{

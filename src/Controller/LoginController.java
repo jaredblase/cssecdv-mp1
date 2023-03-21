@@ -41,7 +41,7 @@ public class LoginController {
                 }
 
                 String error = user == null || !user.getIsLocked() ? "Invalid username or password." :
-                        "Too many failed attempts. Contact an admin to unlock this account.";
+                        "This account has been locked. Please contact an admin for unlocking process.";
                 loginView.setErrorMessage(error);
                 loginView.clearPasswordField();
                 return;

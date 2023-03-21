@@ -25,11 +25,7 @@ public class Frame extends javax.swing.JFrame {
         HomePnl = new javax.swing.JPanel();
         content = content;
         javax.swing.JPanel Navigation = new javax.swing.JPanel();
-        adminBtn = new javax.swing.JButton();
         final javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
-        managerBtn = new javax.swing.JButton();
-        staffBtn = new javax.swing.JButton();
-        clientBtn = new javax.swing.JButton();
         final javax.swing.JButton logoutBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -264,11 +260,11 @@ public class Frame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel HomePnl;
-    private javax.swing.JButton adminBtn;
-    private javax.swing.JButton clientBtn;
+    private final javax.swing.JButton adminBtn = new javax.swing.JButton();
+    private final javax.swing.JButton clientBtn = new javax.swing.JButton();
     private javax.swing.JPanel container;
     private javax.swing.JPanel content;
-    private javax.swing.JButton managerBtn;
-    private javax.swing.JButton staffBtn;
+    private final javax.swing.JButton managerBtn = new javax.swing.JButton();
+    private final javax.swing.JButton staffBtn = new javax.swing.JButton();
     // End of variables declaration//GEN-END:variables
 }

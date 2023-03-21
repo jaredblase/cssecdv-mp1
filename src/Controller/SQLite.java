@@ -1,9 +1,6 @@
 package Controller;
 
-import Model.History;
-import Model.Logs;
-import Model.Product;
-import Model.User;
+import Model.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -219,7 +216,7 @@ public class SQLite {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
-            stmt.setInt(3, user.getRole());
+            stmt.setInt(3, user.getRole().getCode());
             stmt.setInt(4, user.getAttempts());
             stmt.executeUpdate();
         }
@@ -245,6 +242,29 @@ public class SQLite {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, u.getPassword());
             stmt.setString(2, u.getUsername());
+            stmt.executeUpdate();
+        }
+    }
+
+    public void updateUserRoleByUsername(String username, Role role) throws SQLException, NullPointerException {
+        if (role == null) throw new NullPointerException();
+
+        String sql = "UPDATE users SET `role`=? WHERE username=?";
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, role.getCode());
+            stmt.setString(2, username);
+            stmt.executeUpdate();
+        }
+    }
+
+    public void toggleUserLockByUsername(String username) throws SQLException{
+        String sql = "UPDATE users SET attempts = (CASE attempts WHEN 0 THEN 200 ELSE 0 END) WHERE username=?";
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
             stmt.executeUpdate();
         }
     }
@@ -390,16 +410,13 @@ public class SQLite {
         return null;
     }
 
-    public void removeUserByUsername(String username) {
+    public void deleteUserByUsername(String username) throws SQLException {
         String sql = "DELETE FROM users WHERE username=?";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
             stmt.executeUpdate();
-            System.out.println("User " + username + " has been deleted.");
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
     }
 

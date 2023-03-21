@@ -21,7 +21,7 @@ public class MgmtProductController {
         view.setDeleteListener(this::onDelete);
     }
 
-    public void onPurchase(int index, String quantity) {
+    private void onPurchase(int index, String quantity) {
         view.setErrorMessage("");
 
         // TODO: authorize client
@@ -64,7 +64,7 @@ public class MgmtProductController {
         return new Product(name, qty, prc);
     }
 
-    public void onAdd(String name, String stock, String price) {
+    private void onAdd(String name, String stock, String price) {
         view.setErrorMessage("");
 
         try {
@@ -86,7 +86,7 @@ public class MgmtProductController {
         }
     }
 
-    public void onEdit(int idx, String stock, String price) {
+    private void onEdit(int idx, String stock, String price) {
         view.setErrorMessage("");
 
         try {
@@ -101,7 +101,7 @@ public class MgmtProductController {
         }
     }
 
-    public void onDelete(int idx) {
+    private void onDelete(int idx) {
         try {
             db.deleteProductByName(view.getProductNameAt(idx));
             resetTable();
@@ -112,7 +112,7 @@ public class MgmtProductController {
         }
     }
 
-    public void resetTable() {
+    private void resetTable() {
         view.clearTableData();
         view.setTableData(db.getProducts());
     }

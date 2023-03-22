@@ -20,7 +20,7 @@ public class MgmtProductController {
         User user = SessionManager.getUser(db);
 
         if (user == null) {
-            SessionManager.logout();
+            SessionManager.logout(db);
             return;
         }
 
@@ -29,7 +29,7 @@ public class MgmtProductController {
         } else if (user.getRole() == Role.CLIENT) {
             view.setAdminControlVisible(false);
         } else {
-            SessionManager.logout();
+            SessionManager.logout(db);
             return;
         }
 
@@ -46,7 +46,7 @@ public class MgmtProductController {
         User user = SessionManager.getUser(db);
 
         if (user == null || user.getRole() != Role.CLIENT) {
-            SessionManager.logout();
+            SessionManager.logout(db);
             return;
         }
 

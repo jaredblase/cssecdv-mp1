@@ -26,7 +26,7 @@ public class MgmtHistoryController {
         User user = SessionManager.getUser(db);
 
         if (user == null) {
-            SessionManager.logout();
+            SessionManager.logout(db);
         } else if (user.getRole() == Role.MANAGER) {
             return db.getHistory();
         } else if (user.getRole() == Role.CLIENT) {

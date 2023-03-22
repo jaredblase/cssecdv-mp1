@@ -100,7 +100,8 @@ public class SQLite {
         String sql = """
                 CREATE TABLE IF NOT EXISTS sessions (
                  id TEXT PRIMARY KEY,
-                 username TEXT NOT NULL
+                 username TEXT NOT NULL,
+                 `timestamp` TEXT NOT NULL
                 );""";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -251,12 +252,13 @@ public class SQLite {
     }
 
     public void addSession(String sessId, String username) throws SQLException {
-        String sql = "INSERT INTO sessions(id, username) VALUES(?,?)";
+        String sql = "INSERT INTO sessions(id, username, `timestamp`) VALUES(?,?,?)";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, sessId);
             stmt.setString(2, username);
+            stmt.setString(3, new Timestamp(new Date().getTime()).toString());
             stmt.executeUpdate();
         }
     }
@@ -452,16 +454,30 @@ public class SQLite {
         return users;
     }
 
-    public User getUserBySessionId(String sessId) throws SQLException {
-        String sql = "SELECT username FROM sessions WHERE id = ?";
+    public Session getSessionById(String id) throws SQLException {
+        String sql = "SELECT * FROM sessions WHERE id = ?";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, sessId);
+            stmt.setString(1, id);
             ResultSet rs = stmt.executeQuery();
 
-            return rs.next() ? getUserByUsername(rs.getString("username")) : null;
+            return rs.next() ? new Session(
+                    rs.getString("id"),
+                    rs.getString("username"),
+                    rs.getString("timestamp")
+            ) : null;
+        }
+    }
+
+    public void deleteSessionById(String sessId) throws SQLException {
+        String sql = "DELETE FROM sessions WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(driverURL);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, sessId);
+            stmt.executeQuery();
         }
     }
 

@@ -81,7 +81,7 @@ public class HomeController {
             }
         }
 
-        frame.setLogoutActionListener(e -> SessionManager.logout());
+        frame.setLogoutActionListener(e -> SessionManager.logout(db));
         main.showPanel(Panel.HOME);
     }
 }

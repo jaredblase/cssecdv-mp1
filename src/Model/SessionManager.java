@@ -29,15 +29,33 @@ public class SessionManager {
         if (sessId == null) return null;
 
         try {
-            return db.getUserBySessionId(sessId);
+            var session = db.getSessionById(sessId);
+
+            if (session == null || !session.isValid()) {
+                logout(db);
+                return null;
+            }
+
+            return db.getUserByUsername(session.getUsername());
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+
+        return null;
     }
 
-    public static void logout() {
-        prefs.remove(SESSION_ID_KEY);
+    public static void logout(SQLite db) {
+        var sessId = prefs.get(SESSION_ID_KEY, null);
+
+        if (sessId != null) {
+            prefs.remove(SESSION_ID_KEY);
+            try {
+                db.deleteSessionById(sessId);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
         if (logoutListener != null) {
             logoutListener.onAction();
         }

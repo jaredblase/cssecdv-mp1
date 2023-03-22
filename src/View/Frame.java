@@ -215,7 +215,6 @@ public class Frame extends javax.swing.JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setTitle("CSSECDV - SECURITY Svcs");
         this.setLocationRelativeTo(null);
-        this.setVisible(true);
     }
 
     public void setAdminActionListener(ActionListener adminActionListener) {

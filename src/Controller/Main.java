@@ -39,12 +39,13 @@ public class Main {
         new RegisterController(this, registerPnl, sqlite);
         new LoginController(this, loginPnl, sqlite);
         new ForgotPasswordController(this, forgotPasswordPnl);
-        new HomeController(this, frame, sqlite);
 
         SessionManager.setLoginListener(() -> new HomeController(this, frame, sqlite));
         SessionManager.setLogoutListener(() -> showPanel(Panel.LOGIN));
 
         frame.init();
+        new HomeController(this, frame, sqlite);
+        frame.setVisible(true);
     }
 
     public void showPanel(Panel panel) {

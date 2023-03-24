@@ -477,7 +477,7 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, sessId);
-            stmt.executeQuery();
+            stmt.executeUpdate();
         }
     }
 
@@ -534,6 +534,14 @@ public class SQLite {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, name);
             stmt.executeUpdate();
+        }
+    }
+
+    public void deleteLogs() throws SQLException {
+        try (Connection conn = DriverManager.getConnection(driverURL);
+             Statement stmt = conn.createStatement()
+        ) {
+            stmt.executeUpdate("DELETE FROM logs");
         }
     }
 }

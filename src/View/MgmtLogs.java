@@ -5,13 +5,11 @@
  */
 package View;
 
-import Controller.SQLite;
 import Model.Logs;
-import Model.Product;
 
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -22,15 +20,12 @@ public class MgmtLogs extends javax.swing.JPanel {
     private final DefaultTableModel tableModel;
     private ShowComponentListener showTableListener;
     private ActionListener debugListener;
+    private ActionListener clearListener;
 
     public MgmtLogs() {
         initComponents();
         tableModel = (DefaultTableModel) table.getModel();
         table.getTableHeader().setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
-
-//        UNCOMMENT TO DISABLE BUTTONS
-//        clearBtn.setVisible(false);
-//        debugBtn.setVisible(false);
     }
 
     public void clearTableData() {
@@ -56,10 +51,10 @@ public class MgmtLogs extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
+        final javax.swing.JScrollPane jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
-        clearBtn = new javax.swing.JButton();
-        debugBtn = new javax.swing.JButton();
+        final javax.swing.JButton clearBtn = new javax.swing.JButton();
+        final javax.swing.JButton debugBtn = new javax.swing.JButton();
 
         table.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         table.setModel(new javax.swing.table.DefaultTableModel(
@@ -143,7 +138,11 @@ public class MgmtLogs extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void clearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearBtnActionPerformed
+        int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete all logs?", "CLEAR LOGS", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
+        if (result == JOptionPane.OK_OPTION && clearListener != null) {
+            clearListener.actionPerformed(evt);
+        }
     }//GEN-LAST:event_clearBtnActionPerformed
 
     private void debugBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debugBtnActionPerformed
@@ -166,10 +165,11 @@ public class MgmtLogs extends javax.swing.JPanel {
         this.debugListener = debugListener;
     }
 
+    public void setClearListener(ActionListener clearListener) {
+        this.clearListener = clearListener;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton clearBtn;
-    private javax.swing.JButton debugBtn;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 }

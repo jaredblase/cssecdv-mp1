@@ -1,10 +1,7 @@
 package Controller.tables;
 
 import Controller.SQLite;
-import Model.PasswordException;
-import Model.Role;
-import Model.User;
-import Model.UsernameException;
+import Model.*;
 import View.MgmtUser;
 
 import java.sql.SQLException;
@@ -26,13 +23,17 @@ public class MgmtUserController {
         view.setLockUserListener(this::onLock);
         view.setEditUserListener(this::onEditRole);
     }
-    
+
     private void resetTable() {
+        if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
+
         view.clearTableData();
         view.setTableData(db.getUsers());
     }
 
     private void onChangePassword(int idx, char[] password, char[] confirm) {
+        if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
+
         try {
             validatePassword(password);
 
@@ -53,6 +54,8 @@ public class MgmtUserController {
     }
 
     private void onEditRole(int idx, String role) {
+        if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
+
         try {
             var r = Role.valueOf(Integer.parseInt(role));
             db.updateUserRoleByUsername(view.getUsernameAt(idx), r);
@@ -67,6 +70,8 @@ public class MgmtUserController {
     }
 
     private void onDelete(int idx) {
+        if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
+
         try {
             db.deleteUserByUsername(view.getUsernameAt(idx));
             view.closeDialog();
@@ -79,6 +84,8 @@ public class MgmtUserController {
     }
 
     private void onLock(int idx) {
+        if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
+
         try {
             db.toggleUserLockByUsername(view.getUsernameAt(idx));
         } catch (SQLException e) {

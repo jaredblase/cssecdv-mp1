@@ -11,6 +11,7 @@ public class SessionManager {
     private static final String SESSION_ID_KEY = "session_id";
     private static SessionListener loginListener;
     private static SessionListener logoutListener;
+    private static SessionListener unauthorizedListener;
 
     public static String login(SQLite db, String username) throws SQLException {
         var sessionId = UUID.randomUUID().toString();
@@ -44,6 +45,24 @@ public class SessionManager {
         return null;
     }
 
+    public static User getAuthorizedUser(SQLite db, Role ...roles) {
+        User user = getUser(db);
+
+        if (user == null) {
+            logout(db);
+            return null;
+        }
+
+        for (Role role : roles) {
+            if (user.getRole() == role) {
+                return user;
+            }
+        }
+
+        onUnauthorized();
+        return null;
+    }
+
     public static void logout(SQLite db) {
         var sessId = prefs.get(SESSION_ID_KEY, null);
 
@@ -61,12 +80,22 @@ public class SessionManager {
         }
     }
 
+    public static void onUnauthorized() {
+        if (unauthorizedListener != null) {
+            unauthorizedListener.onAction();
+        }
+    }
+
     public static void setLoginListener(SessionListener loginListener) {
         SessionManager.loginListener = loginListener;
     }
 
     public static void setLogoutListener(SessionListener logoutListener) {
         SessionManager.logoutListener = logoutListener;
+    }
+
+    public static void setUnauthorizedListener(SessionListener unauthorizedListener) {
+        SessionManager.unauthorizedListener = unauthorizedListener;
     }
 
     public interface SessionListener {

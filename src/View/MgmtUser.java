@@ -187,7 +187,7 @@ public class MgmtUser extends javax.swing.JPanel {
         optionList.setSelectedIndex((int) tableModel.getValueAt(table.getSelectedRow(), 2) - 2);
 
         String result = (String) JOptionPane.showInputDialog(null, "USER: " + getUsernameAt(idx),
-                "EDIT USER ROLE", JOptionPane.QUESTION_MESSAGE, null, options, options[(int) tableModel.getValueAt(idx, 2) - 1]);
+                "EDIT USER ROLE", JOptionPane.QUESTION_MESSAGE, null, options, options[(int) tableModel.getValueAt(idx, 2) - 2]);
 
         if (result != null && editUserListener != null) {
             editUserListener.onEdit(idx, result.substring(0, 1));

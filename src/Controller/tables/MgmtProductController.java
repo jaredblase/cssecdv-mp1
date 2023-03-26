@@ -1,10 +1,7 @@
 package Controller.tables;
 
 import Controller.SQLite;
-import Model.Product;
-import Model.Role;
-import Model.SessionManager;
-import Model.User;
+import Model.*;
 import View.MgmtProduct;
 
 import java.sql.SQLException;
@@ -17,20 +14,13 @@ public class MgmtProductController {
         this.view = view;
         this.db = db;
 
-        User user = SessionManager.getUser(db);
-
-        if (user == null) {
-            SessionManager.logout(db);
-            return;
-        }
-
-        if (user.getRole() == Role.MANAGER || user.getRole() == Role.STAFF) {
-            view.setAdminControlVisible(true);
-        } else if (user.getRole() == Role.CLIENT) {
-            view.setAdminControlVisible(false);
-        } else {
-            SessionManager.logout(db);
-            return;
+        User user = SessionManager.getAuthorizedUser(db, Role.MANAGER, Role.STAFF, Role.CLIENT);
+        if (user != null) {
+            if (user.getRole() == Role.MANAGER || user.getRole() == Role.STAFF) {
+                view.setAdminControlVisible(true);
+            } else if (user.getRole() == Role.CLIENT) {
+                view.setAdminControlVisible(false);
+            }
         }
 
         view.setShowTableListener(this::resetTable);
@@ -43,12 +33,8 @@ public class MgmtProductController {
     private void onPurchase(int index, String quantity) {
         view.setErrorMessage("");
 
-        User user = SessionManager.getUser(db);
-
-        if (user == null || user.getRole() != Role.CLIENT) {
-            SessionManager.logout(db);
-            return;
-        }
+        User user = SessionManager.getAuthorizedUser(db, Role.CLIENT);
+        if (user == null) return;
 
         try {
             var qty = Integer.parseInt(quantity);
@@ -92,6 +78,7 @@ public class MgmtProductController {
         view.setErrorMessage("");
 
         try {
+            if (SessionManager.getAuthorizedUser(db, Role.MANAGER, Role.STAFF) == null) return;
             db.addProduct(parseProduct(name, stock, price));
             resetTable();
             view.closeDialog();
@@ -114,6 +101,7 @@ public class MgmtProductController {
         view.setErrorMessage("");
 
         try {
+            if (SessionManager.getAuthorizedUser(db, Role.MANAGER, Role.STAFF) == null) return;
             db.updateProduct(parseProduct(view.getProductNameAt(idx), stock, price));
             resetTable();
             view.closeDialog();
@@ -127,6 +115,7 @@ public class MgmtProductController {
 
     private void onDelete(int idx) {
         try {
+            if (SessionManager.getAuthorizedUser(db, Role.MANAGER, Role.STAFF) == null) return;
             db.deleteProductByName(view.getProductNameAt(idx));
             resetTable();
             view.closeDialog();
@@ -137,6 +126,7 @@ public class MgmtProductController {
     }
 
     private void resetTable() {
+        if (SessionManager.getAuthorizedUser(db, Role.MANAGER, Role.STAFF, Role.CLIENT) == null) return;
         view.clearTableData();
         view.setTableData(db.getProducts());
     }

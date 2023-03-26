@@ -31,56 +31,62 @@ public class HomeController {
         frame.setStaffVisible(false);
         frame.setClientVisible(false);
 
+        SessionManager.SessionListener showHome;
+
         switch (user.getRole()) {
             case ADMINISTRATOR -> {
                 AdminHome adminHomePnl = new AdminHome();
                 new AdminHomeController(adminHomePnl, db);
-
                 frame.setAdminVisible(true);
-                frame.setAdminActionListener(e -> {
+                showHome = () -> {
                     adminHomePnl.showPnl("home");
                     contentView.show(content, Panel.ADMIN.name());
-                });
+                };
+                frame.setAdminActionListener(e -> showHome.onAction());
                 content.add(adminHomePnl, Panel.ADMIN.name());
             }
 
             case MANAGER -> {
                 ManagerHome managerHomePnl = new ManagerHome();
                 new ManagerHomeController(managerHomePnl, db);
-
                 frame.setManagerVisible(true);
-                frame.setManagerActionListener(e -> {
+                showHome = () -> {
                     managerHomePnl.showPnl("home");
                     contentView.show(content, Panel.MANAGER.name());
-                });
+                };
+                frame.setManagerActionListener(e -> showHome.onAction());
                 content.add(managerHomePnl, Panel.MANAGER.name());
             }
 
             case STAFF -> {
                 StaffHome staffHomePnl = new StaffHome();
                 new StaffHomeController(staffHomePnl, db);
-
                 frame.setStaffVisible(true);
-                frame.setStaffActionListener(e -> {
+                showHome = () -> {
                     staffHomePnl.showPnl("home");
                     contentView.show(content, Panel.STAFF.name());
-                });
+                };
+                frame.setStaffActionListener(e -> showHome.onAction());
                 content.add(staffHomePnl, Panel.STAFF.name());
             }
 
             case CLIENT -> {
                 ClientHome clientHomePnl = new ClientHome();
                 new ClientHomeController(clientHomePnl, db);
-
                 frame.setClientVisible(true);
-                frame.setClientActionListener(e -> {
+                showHome = () -> {
                     clientHomePnl.showPnl("home");
                     contentView.show(content, Panel.CLIENT.name());
-                });
+                };
+                frame.setClientActionListener(e -> showHome.onAction());
                 content.add(clientHomePnl, Panel.CLIENT.name());
             }
+            default -> showHome = null;
         }
 
+        if (showHome != null) {
+            SessionManager.setUnauthorizedListener(showHome);
+        }
         frame.setLogoutActionListener(e -> SessionManager.logout(db));
         main.showPanel(Panel.HOME);
     }

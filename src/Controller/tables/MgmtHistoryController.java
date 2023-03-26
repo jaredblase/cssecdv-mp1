@@ -23,26 +23,33 @@ public class MgmtHistoryController {
     }
 
     private ArrayList<History> getData() {
-        User user = SessionManager.getUser(db);
+        User user = SessionManager.getAuthorizedUser(db, Role.MANAGER, Role.CLIENT);
 
-        if (user == null) {
-            SessionManager.logout(db);
-        } else if (user.getRole() == Role.MANAGER) {
+        if (user == null) return null;
+
+        if (user.getRole() == Role.MANAGER) {
             return db.getHistory();
         } else if (user.getRole() == Role.CLIENT) {
             return db.getUserHistoryByUsername(user.getUsername());
         }
 
-        return new ArrayList<>();
+        return null;
     }
 
     public void resetTable() {
         view.clearTableData();
-        view.setTableData(getData());
+
+        var data = getData();
+        if (data != null) {
+            view.setTableData(data);
+        }
     }
 
     public void filterTable(String text) {
         view.clearTableData();
+
+        var data = getData();
+        if (data == null) return;
 
         var filtered = getData().stream().filter(h ->
                 text.contains(h.getUsername()) || h.getUsername().contains(text) ||

@@ -1,6 +1,8 @@
 package Controller.tables;
 
 import Controller.SQLite;
+import Model.Role;
+import Model.SessionManager;
 import View.MgmtLogs;
 
 import java.awt.event.ActionEvent;
@@ -21,10 +23,14 @@ public class MgmtLogsController {
 
     private void resetTable() {
         view.clearTableData();
-        view.setTableData(db.getLogs());
+        if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) != null) {
+            view.setTableData(db.getLogs());
+        }
     }
 
     private void clearLogs(ActionEvent e) {
+        if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
+
         try {
             db.deleteLogs();
             view.clearTableData();
@@ -34,6 +40,6 @@ public class MgmtLogsController {
     }
 
     private void toggleDebug(ActionEvent e) {
-        db.DEBUG_MODE = 1 - db.DEBUG_MODE;
+        db.DEBUG_MODE = !db.DEBUG_MODE;
     }
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class SQLite {
-    public int DEBUG_MODE = 0;
+    public boolean DEBUG_MODE = false;
     String driverURL = "jdbc:sqlite:" + "database.db";
 
     public void createNewDatabase() {

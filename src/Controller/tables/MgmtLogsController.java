@@ -16,14 +16,20 @@ public class MgmtLogsController {
         this.view = view;
         this.db = db;
 
-        view.setShowTableListener(this::resetTable);
+        view.setShowTableListener(() -> {
+            resetTable();
+            setupDebugBtn();
+        });
         view.setDebugListener(this::toggleDebug);
         view.setClearListener(this::clearLogs);
     }
 
+    private void setupDebugBtn() {
+        view.setDebugBtnText(db.DEBUG_MODE ? "DISABLE DEBUG MODE" : "ENABLE DEBUG MODE");
+    }
+
     private void resetTable() {
         view.clearTableData();
-        System.out.println(db.DEBUG_MODE);
         try {
             if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) != null) {
                 view.setTableData(db.getLogs());
@@ -53,6 +59,7 @@ public class MgmtLogsController {
             session.setDebugMode(newMode);
             db.updateSession(session);
             db.DEBUG_MODE = newMode;
+            setupDebugBtn();
         } catch (Exception err) {
             if (db.DEBUG_MODE) err.printStackTrace();
         }

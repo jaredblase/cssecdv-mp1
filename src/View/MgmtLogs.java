@@ -54,7 +54,6 @@ public class MgmtLogs extends javax.swing.JPanel {
         final javax.swing.JScrollPane jScrollPane1 = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
         final javax.swing.JButton clearBtn = new javax.swing.JButton();
-        final javax.swing.JButton debugBtn = new javax.swing.JButton();
 
         table.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         table.setModel(new javax.swing.table.DefaultTableModel(
@@ -104,7 +103,6 @@ public class MgmtLogs extends javax.swing.JPanel {
         });
 
         debugBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        debugBtn.setText("ENABLE/DISABLE DEBUG MODE");
         debugBtn.setToolTipText("");
         debugBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -122,8 +120,8 @@ public class MgmtLogs extends javax.swing.JPanel {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(debugBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(0, 0, 0)
-                        .addComponent(clearBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(clearBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -169,7 +167,12 @@ public class MgmtLogs extends javax.swing.JPanel {
         this.clearListener = clearListener;
     }
 
+    public void setDebugBtnText(String text) {
+        this.debugBtn.setText(text);
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private final javax.swing.JButton debugBtn = new javax.swing.JButton();
     private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
 }

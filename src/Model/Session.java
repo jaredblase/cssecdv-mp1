@@ -8,12 +8,14 @@ public class Session {
     private final String id;
     private final String username;
     private final Date timestamp;
+    private boolean debugMode;
     private static final int MAX_AGE = 86_400_000;
 
-    public Session(String id, String username, String timestamp) {
+    public Session(String id, String username, String timestamp, boolean debugMode) {
         this.id = id;
         this.username = username;
         this.timestamp = Timestamp.valueOf(timestamp);
+        this.debugMode = debugMode;
     }
 
     public String getId() {
@@ -34,5 +36,13 @@ public class Session {
         c.add(Calendar.MILLISECOND, MAX_AGE);
 
         return c.getTime().after(new Date());
+    }
+
+    public boolean isDebugMode() {
+        return debugMode;
+    }
+
+    public void setDebugMode(boolean debugMode) {
+        this.debugMode = debugMode;
     }
 }

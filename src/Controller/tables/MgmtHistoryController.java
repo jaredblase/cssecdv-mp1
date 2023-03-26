@@ -7,6 +7,7 @@ import Model.SessionManager;
 import Model.User;
 import View.MgmtHistory;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MgmtHistoryController {
@@ -23,14 +24,18 @@ public class MgmtHistoryController {
     }
 
     private ArrayList<History> getData() {
-        User user = SessionManager.getAuthorizedUser(db, Role.MANAGER, Role.CLIENT);
+        try {
+            User user = SessionManager.getAuthorizedUser(db, Role.MANAGER, Role.CLIENT);
 
-        if (user == null) return null;
+            if (user == null) return null;
 
-        if (user.getRole() == Role.MANAGER) {
-            return db.getHistory();
-        } else if (user.getRole() == Role.CLIENT) {
-            return db.getUserHistoryByUsername(user.getUsername());
+            if (user.getRole() == Role.MANAGER) {
+                return db.getHistory();
+            } else if (user.getRole() == Role.CLIENT) {
+                return db.getUserHistoryByUsername(user.getUsername());
+            }
+        } catch (SQLException e) {
+            if (db.DEBUG_MODE) e.printStackTrace();
         }
 
         return null;

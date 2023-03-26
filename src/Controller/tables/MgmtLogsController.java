@@ -23,15 +23,19 @@ public class MgmtLogsController {
 
     private void resetTable() {
         view.clearTableData();
-        if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) != null) {
-            view.setTableData(db.getLogs());
+        System.out.println(db.DEBUG_MODE);
+        try {
+            if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) != null) {
+                view.setTableData(db.getLogs());
+            }
+        } catch (SQLException e) {
+            if (db.DEBUG_MODE) e.printStackTrace();
         }
     }
 
     private void clearLogs(ActionEvent e) {
-        if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
-
         try {
+            if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
             db.deleteLogs();
             view.clearTableData();
         } catch (SQLException ex) {
@@ -40,6 +44,17 @@ public class MgmtLogsController {
     }
 
     private void toggleDebug(ActionEvent e) {
-        db.DEBUG_MODE = !db.DEBUG_MODE;
+        var newMode = !db.DEBUG_MODE;
+
+        try {
+            var session = SessionManager.getSession(db);
+            if (session == null) throw new Exception("Session not found!");
+
+            session.setDebugMode(newMode);
+            db.updateSession(session);
+            db.DEBUG_MODE = newMode;
+        } catch (Exception err) {
+            if (db.DEBUG_MODE) err.printStackTrace();
+        }
     }
 }

@@ -4,6 +4,7 @@ import Controller.rolehome.AdminHomeController;
 import Controller.rolehome.ClientHomeController;
 import Controller.rolehome.ManagerHomeController;
 import Controller.rolehome.StaffHomeController;
+import Model.Session;
 import Model.SessionManager;
 import Model.User;
 import View.*;
@@ -11,6 +12,7 @@ import View.Frame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 
 public class HomeController {
     public HomeController(Main main, Frame frame, SQLite db) {
@@ -19,7 +21,15 @@ public class HomeController {
         content.removeAll();
         content.setLayout(contentView);
 
-        User user = SessionManager.getUser(db);
+        Session session = null;
+        User user = null;
+
+        try {
+            session = SessionManager.getSession(db);
+            user = SessionManager.getUser(db, session);
+        } catch (SQLException e) {
+            if (db.DEBUG_MODE) e.printStackTrace();
+        }
 
         if (user == null) {
             main.showPanel(Panel.LOGIN);
@@ -32,6 +42,7 @@ public class HomeController {
         frame.setClientVisible(false);
 
         SessionManager.SessionListener showHome;
+        db.DEBUG_MODE = false;
 
         switch (user.getRole()) {
             case ADMINISTRATOR -> {
@@ -42,6 +53,8 @@ public class HomeController {
                     adminHomePnl.showPnl("home");
                     contentView.show(content, Panel.ADMIN.name());
                 };
+
+                db.DEBUG_MODE = session.isDebugMode();
                 frame.setAdminActionListener(e -> showHome.onAction());
                 content.add(adminHomePnl, Panel.ADMIN.name());
             }

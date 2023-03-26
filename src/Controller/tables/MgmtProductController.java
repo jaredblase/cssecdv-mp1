@@ -14,13 +14,17 @@ public class MgmtProductController {
         this.view = view;
         this.db = db;
 
-        User user = SessionManager.getAuthorizedUser(db, Role.MANAGER, Role.STAFF, Role.CLIENT);
-        if (user != null) {
-            if (user.getRole() == Role.MANAGER || user.getRole() == Role.STAFF) {
-                view.setAdminControlVisible(true);
-            } else if (user.getRole() == Role.CLIENT) {
-                view.setAdminControlVisible(false);
+        try {
+            User user = SessionManager.getAuthorizedUser(db, Role.MANAGER, Role.STAFF, Role.CLIENT);
+            if (user != null) {
+                if (user.getRole() == Role.MANAGER || user.getRole() == Role.STAFF) {
+                    view.setAdminControlVisible(true);
+                } else if (user.getRole() == Role.CLIENT) {
+                    view.setAdminControlVisible(false);
+                }
             }
+        } catch (SQLException e) {
+            if (db.DEBUG_MODE) e.printStackTrace();
         }
 
         view.setShowTableListener(this::resetTable);
@@ -33,7 +37,14 @@ public class MgmtProductController {
     private void onPurchase(int index, String quantity) {
         view.setErrorMessage("");
 
-        User user = SessionManager.getAuthorizedUser(db, Role.CLIENT);
+        User user = null;
+
+        try {
+            user = SessionManager.getAuthorizedUser(db, Role.CLIENT);
+        } catch (SQLException e) {
+            if (db.DEBUG_MODE) e.printStackTrace();
+        }
+
         if (user == null) return;
 
         try {
@@ -126,8 +137,13 @@ public class MgmtProductController {
     }
 
     private void resetTable() {
-        if (SessionManager.getAuthorizedUser(db, Role.MANAGER, Role.STAFF, Role.CLIENT) == null) return;
-        view.clearTableData();
-        view.setTableData(db.getProducts());
+        try {
+            if (SessionManager.getAuthorizedUser(db, Role.MANAGER, Role.STAFF, Role.CLIENT) == null) return;
+
+            view.clearTableData();
+            view.setTableData(db.getProducts());
+        } catch (SQLException e) {
+            if (db.DEBUG_MODE) e.printStackTrace();
+        }
     }
 }

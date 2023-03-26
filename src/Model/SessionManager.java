@@ -25,27 +25,30 @@ public class SessionManager {
         return sessionId;
     }
 
-    public static User getUser(SQLite db) {
+    public static Session getSession(SQLite db) throws SQLException {
         var sessId = prefs.get(SESSION_ID_KEY, null);
         if (sessId == null) return null;
 
-        try {
-            var session = db.getSessionById(sessId);
+        var session = db.getSessionById(sessId);
 
-            if (session == null || !session.isValid()) {
-                logout(db);
-                return null;
-            }
-
-            return db.getUserByUsername(session.getUsername());
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (session == null || !session.isValid()) {
+            logout(db);
+            return null;
         }
 
-        return null;
+        return session;
     }
 
-    public static User getAuthorizedUser(SQLite db, Role ...roles) {
+    public static User getUser(SQLite db) throws SQLException {
+        return getUser(db, getSession(db));
+    }
+
+    public static User getUser(SQLite db, Session session) throws SQLException {
+        if (session == null) return null;
+        return db.getUserByUsername(session.getUsername());
+    }
+
+    public static User getAuthorizedUser(SQLite db, Role... roles) throws SQLException {
         User user = getUser(db);
 
         if (user == null) {

@@ -101,7 +101,8 @@ public class SQLite {
                 CREATE TABLE IF NOT EXISTS sessions (
                  id TEXT PRIMARY KEY,
                  username TEXT NOT NULL,
-                 `timestamp` TEXT NOT NULL
+                 `timestamp` TEXT NOT NULL,
+                 debug_mode INTEGER NOT NULL DEFAULT FALSE
                 );""";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -219,6 +220,18 @@ public class SQLite {
             stmt.setString(1, product.getName());
             stmt.setInt(2, product.getStock());
             stmt.setDouble(3, product.getPrice());
+            stmt.executeUpdate();
+        }
+    }
+
+    public void updateSession(Session session) throws SQLException {
+        var sql = "UPDATE sessions SET debug_mode = ? WHERE id = ?";
+
+        try (var conn = DriverManager.getConnection(driverURL);
+             var stmt = conn.prepareStatement(sql)) {
+
+            stmt.setBoolean(1, session.isDebugMode());
+            stmt.setString(2, session.getId());
             stmt.executeUpdate();
         }
     }
@@ -463,7 +476,8 @@ public class SQLite {
             return rs.next() ? new Session(
                     rs.getString("id"),
                     rs.getString("username"),
-                    rs.getString("timestamp")
+                    rs.getString("timestamp"),
+                    rs.getBoolean("debug_mode")
             ) : null;
         }
     }

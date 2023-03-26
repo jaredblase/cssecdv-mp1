@@ -25,16 +25,18 @@ public class MgmtUserController {
     }
 
     private void resetTable() {
-        if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
-
-        view.clearTableData();
-        view.setTableData(db.getUsers());
+        try {
+            if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
+            view.clearTableData();
+            view.setTableData(db.getUsers());
+        } catch (SQLException e) {
+            if (db.DEBUG_MODE) e.printStackTrace();
+        }
     }
 
     private void onChangePassword(int idx, char[] password, char[] confirm) {
-        if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
-
         try {
+            if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
             validatePassword(password);
 
             if (password.length != confirm.length || !Arrays.equals(password, confirm)) {
@@ -54,9 +56,8 @@ public class MgmtUserController {
     }
 
     private void onEditRole(int idx, String role) {
-        if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
-
         try {
+            if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
             var r = Role.valueOf(Integer.parseInt(role));
             db.updateUserRoleByUsername(view.getUsernameAt(idx), r);
         } catch (SQLException e) {
@@ -70,9 +71,8 @@ public class MgmtUserController {
     }
 
     private void onDelete(int idx) {
-        if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
-
         try {
+            if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
             db.deleteUserByUsername(view.getUsernameAt(idx));
             view.closeDialog();
         } catch (SQLException e) {
@@ -84,9 +84,8 @@ public class MgmtUserController {
     }
 
     private void onLock(int idx) {
-        if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
-
         try {
+            if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
             db.toggleUserLockByUsername(view.getUsernameAt(idx));
         } catch (SQLException e) {
             if (db.DEBUG_MODE) e.printStackTrace();

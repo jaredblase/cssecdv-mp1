@@ -177,7 +177,7 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL)) {
             addHistory(conn, history);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
     }
 
@@ -194,7 +194,7 @@ public class SQLite {
         }
     }
 
-    public void addLogs(String event, String username, String desc, String timestamp) {
+    public void addLogs(String event, String username, String desc, String timestamp) throws SQLException {
         String sql = "INSERT INTO logs(event,username,`desc`,`timestamp`) VALUES(?,?,?,?)";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -204,12 +204,10 @@ public class SQLite {
             stmt.setString(3, desc);
             stmt.setString(4, timestamp == null ? new Timestamp(new Date().getTime()).toString() : timestamp);
             stmt.executeUpdate();
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
     }
 
-    public void addUserEventLog(User user, String desc, String timestamp) {
+    public void addUserEventLog(User user, String desc, String timestamp) throws SQLException {
         addLogs("NOTICE", user.getUsername(), desc, timestamp);
     }
 
@@ -263,7 +261,7 @@ public class SQLite {
         }
     }
 
-    public void saveUserAttempts(User u) {
+    public void saveUserAttempts(User u) throws SQLException {
         String sql = "UPDATE users SET attempts=? WHERE username=?";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -271,8 +269,6 @@ public class SQLite {
             stmt.setInt(1, u.getAttempts());
             stmt.setString(2, u.getUsername());
             stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -340,7 +336,8 @@ public class SQLite {
                 conn.commit();
             } catch (Exception ex) {
                 conn.rollback();
-                ex.printStackTrace();
+
+                if (DEBUG_MODE) ex.printStackTrace();
             } finally {
                 conn.setAutoCommit(true);
             }
@@ -364,7 +361,7 @@ public class SQLite {
                         rs.getString("timestamp")));
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
         return histories;
     }
@@ -387,7 +384,7 @@ public class SQLite {
                         rs.getString("timestamp")));
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
         return histories;
     }
@@ -408,7 +405,7 @@ public class SQLite {
                         rs.getString("timestamp")));
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
         return logs;
     }
@@ -428,7 +425,7 @@ public class SQLite {
                         rs.getFloat("price")));
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
         return products;
     }
@@ -449,7 +446,7 @@ public class SQLite {
                         rs.getInt("attempts")));
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
         return users;
     }
@@ -522,7 +519,7 @@ public class SQLite {
                     rs.getInt("stock"),
                     rs.getFloat("price"));
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
         return product;
     }

@@ -48,7 +48,7 @@ public class MgmtUserController {
         } catch (UsernameException | PasswordException e) {
             view.setErrorMessage(e.getMessage());
         } catch (SQLException e) {
-            e.printStackTrace();
+            if (db.DEBUG_MODE) e.printStackTrace();
             view.setErrorMessage("An error has occurred on our end. Please try again later.");
         }
     }
@@ -60,10 +60,10 @@ public class MgmtUserController {
             var r = Role.valueOf(Integer.parseInt(role));
             db.updateUserRoleByUsername(view.getUsernameAt(idx), r);
         } catch (SQLException e) {
-            e.printStackTrace();
+            if (db.DEBUG_MODE) e.printStackTrace();
             view.setErrorMessage("An error has occurred on our end. Please try again later.");
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            if (db.DEBUG_MODE) e.printStackTrace();
         } finally {
             resetTable();
         }
@@ -76,7 +76,7 @@ public class MgmtUserController {
             db.deleteUserByUsername(view.getUsernameAt(idx));
             view.closeDialog();
         } catch (SQLException e) {
-            e.printStackTrace();
+            if (db.DEBUG_MODE) e.printStackTrace();
             view.setErrorMessage("An error has occurred on our end. Please try again later.");
         } finally {
             resetTable();
@@ -89,7 +89,7 @@ public class MgmtUserController {
         try {
             db.toggleUserLockByUsername(view.getUsernameAt(idx));
         } catch (SQLException e) {
-            e.printStackTrace();
+            if (db.DEBUG_MODE) e.printStackTrace();
             view.setErrorMessage("An error has occurred on our end. Please try again later.");
         } finally {
             resetTable();

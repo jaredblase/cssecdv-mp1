@@ -95,10 +95,13 @@ public class Main {
         }
 
         // Add sample logs
-        sqlite.addLogs("NOTICE", "admin", "User creation successful", null);
-        sqlite.addLogs("NOTICE", "manager", "User creation successful", null);
-        sqlite.addLogs("NOTICE", "admin", "User creation successful", null);
-
+        try {
+            sqlite.addLogs("NOTICE", "admin", "User creation successful", null);
+            sqlite.addLogs("NOTICE", "manager", "User creation successful", null);
+            sqlite.addLogs("NOTICE", "admin", "User creation successful", null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         // Add sample users
         char[] password = {'Q', 'w', 'e', 'r', 't', 'y', '1', '2', '3', '4', '.'};

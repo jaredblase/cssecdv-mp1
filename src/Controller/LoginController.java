@@ -53,7 +53,7 @@ public class LoginController {
 
             SessionManager.login(db, username);
         } catch (Exception e) {
-            e.printStackTrace();
+            if (db.DEBUG_MODE) e.printStackTrace();
             loginView.setErrorMessage("A problem occurred on our side. Please try again later.");
         }
     }

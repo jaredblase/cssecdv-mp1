@@ -91,7 +91,7 @@ public class MgmtProductController {
             }
 
             view.setErrorMessage("An error has occurred on our end. Please try again later.");
-            e.printStackTrace();
+            if (db.DEBUG_MODE) e.printStackTrace();
         } catch (Exception e) {
             view.setErrorMessage(e.getMessage());
         }
@@ -107,7 +107,7 @@ public class MgmtProductController {
             view.closeDialog();
         } catch (SQLException e) {
             view.setErrorMessage("An error has occurred on our end. Please try again later.");
-            e.printStackTrace();
+            if (db.DEBUG_MODE) e.printStackTrace();
         } catch (Exception e) {
             view.setErrorMessage(e.getMessage());
         }

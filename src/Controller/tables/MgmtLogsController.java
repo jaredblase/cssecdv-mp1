@@ -35,7 +35,7 @@ public class MgmtLogsController {
             db.deleteLogs();
             view.clearTableData();
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            if (db.DEBUG_MODE) ex.printStackTrace();
         }
     }
 

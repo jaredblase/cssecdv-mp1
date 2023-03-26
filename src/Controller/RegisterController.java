@@ -50,7 +50,7 @@ public class RegisterController {
             }
 
             regView.setErrorMessage("An error has occurred on our end. Please try again later.");
-            e.printStackTrace();
+            if (db.DEBUG_MODE) e.printStackTrace();
         }
     }
 }

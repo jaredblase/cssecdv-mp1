@@ -172,7 +172,7 @@ public class MgmtHistory extends javax.swing.JPanel {
         int result = JOptionPane.showConfirmDialog(null, message, "SEARCH HISTORY", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
         if (result == JOptionPane.OK_OPTION && filterListener != null) {
-            filterListener.onFilter(searchFld.getText());
+            filterListener.onFilter(searchFld.getText().toLowerCase());
         }
     }//GEN-LAST:event_searchBtnActionPerformed
 

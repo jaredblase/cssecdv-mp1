@@ -24,7 +24,7 @@ public class MgmtProductController {
                 }
             }
         } catch (SQLException e) {
-            if (db.DEBUG_MODE) e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
         }
 
         view.setShowTableListener(this::resetTable);
@@ -42,7 +42,7 @@ public class MgmtProductController {
         try {
             user = SessionManager.getAuthorizedUser(db, Role.CLIENT);
         } catch (SQLException e) {
-            if (db.DEBUG_MODE) e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
         }
 
         if (user == null) return;
@@ -55,7 +55,9 @@ public class MgmtProductController {
             }
 
             var productName = view.getProductNameAt(index);
-            db.addPurchase(user.getUsername(), productName, qty);
+            String username = user.getUsername();
+            db.addPurchase(username, productName, qty);
+            db.addLogs("NOTICE", username, "Purchase of product " + productName + " successful", null);
             view.closeDialog();
         } catch (NumberFormatException e) {
             view.setErrorMessage("Input must be a positive whole number.");
@@ -90,7 +92,10 @@ public class MgmtProductController {
 
         try {
             if (SessionManager.getAuthorizedUser(db, Role.MANAGER, Role.STAFF) == null) return;
-            db.addProduct(parseProduct(name, stock, price));
+            Product product = parseProduct(name, stock, price);
+            db.addProduct(product);
+            db.addLogs("NOTICE", SessionManager.getUser(db).getUsername(),
+                    "Added product " + product.getName(), null);
             resetTable();
             view.closeDialog();
         } catch (SQLException e) {
@@ -102,7 +107,7 @@ public class MgmtProductController {
             }
 
             view.setErrorMessage("An error has occurred on our end. Please try again later.");
-            if (db.DEBUG_MODE) e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
         } catch (Exception e) {
             view.setErrorMessage(e.getMessage());
         }
@@ -113,12 +118,15 @@ public class MgmtProductController {
 
         try {
             if (SessionManager.getAuthorizedUser(db, Role.MANAGER, Role.STAFF) == null) return;
-            db.updateProduct(parseProduct(view.getProductNameAt(idx), stock, price));
+            Product product = parseProduct(view.getProductNameAt(idx), stock, price);
+            db.updateProduct(product);
+            db.addLogs("NOTICE", SessionManager.getUser(db).getUsername(),
+                    "Edited product " + product.getName(), null);
             resetTable();
             view.closeDialog();
         } catch (SQLException e) {
             view.setErrorMessage("An error has occurred on our end. Please try again later.");
-            if (db.DEBUG_MODE) e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
         } catch (Exception e) {
             view.setErrorMessage(e.getMessage());
         }
@@ -127,12 +135,15 @@ public class MgmtProductController {
     private void onDelete(int idx) {
         try {
             if (SessionManager.getAuthorizedUser(db, Role.MANAGER, Role.STAFF) == null) return;
-            db.deleteProductByName(view.getProductNameAt(idx));
+            String name = view.getProductNameAt(idx);
+            db.deleteProductByName(name);
+            db.addLogs("NOTICE", SessionManager.getUser(db).getUsername(),
+                    "Deleted product " + name, null);
             resetTable();
             view.closeDialog();
         } catch (SQLException e) {
             view.setErrorMessage("An error has occurred on our end. Please try again later.");
-            e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
         }
     }
 
@@ -143,7 +154,7 @@ public class MgmtProductController {
             view.clearTableData();
             view.setTableData(db.getProducts());
         } catch (SQLException e) {
-            if (db.DEBUG_MODE) e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
         }
     }
 }

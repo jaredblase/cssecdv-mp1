@@ -83,7 +83,7 @@ public class Main {
                     sqlite.addProduct(p);
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (SQLite.DEBUG_MODE) e.printStackTrace();
             }
 
             // Add sample history
@@ -91,7 +91,7 @@ public class Main {
             sqlite.addHistory(new History("manager", products[1], 1));
             sqlite.addHistory(new History("staff", products[2], 1));
         } catch (Exception e) {
-            e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
         }
 
         // Add sample logs
@@ -100,7 +100,7 @@ public class Main {
             sqlite.addLogs("NOTICE", "manager", "User creation successful", null);
             sqlite.addLogs("NOTICE", "admin", "User creation successful", null);
         } catch (SQLException e) {
-            e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
         }
 
         // Add sample users
@@ -112,7 +112,7 @@ public class Main {
             sqlite.addUser(new User("client1", password, Role.CLIENT));
             sqlite.addUser(new User("client2", password, Role.CLIENT));
         } catch (Exception e) {
-            e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
         } finally {
             Arrays.fill(password, '0');
         }

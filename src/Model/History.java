@@ -5,6 +5,8 @@
  */
 package Model;
 
+import Controller.SQLite;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,7 +41,7 @@ public class History {
         try {
             this.timestamp = new Timestamp(dateformat.parse(timestamp).getTime());
         } catch (ParseException ex) {
-            ex.printStackTrace();
+            if (SQLite.DEBUG_MODE) ex.printStackTrace();
         }
     }
 

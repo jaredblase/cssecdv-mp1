@@ -1,5 +1,7 @@
 package Model;
 
+import Controller.SQLite;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.SecureRandom;
@@ -30,7 +32,7 @@ public class PasswordUtils {
             String saltString = Base64.getEncoder().encodeToString(salt);
             return hash + saltString;
         } catch (Exception e) {
-            e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
             throw new PasswordException("An error has occurred in hashing!");
         }
     }
@@ -75,7 +77,7 @@ public class PasswordUtils {
         try {
             return hash.equals(hashPassword(password, hash.substring(24)));
         } catch (Exception e) {
-            e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
         }
 
         return false;

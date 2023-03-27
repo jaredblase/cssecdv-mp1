@@ -34,9 +34,9 @@ public class LoginController {
                 if (user != null) {
                     user.addAttempt();
                     db.saveUserAttempts(user);
-                    db.addUserEventLog(user, "User login failed attempt", null);
+                    db.addLogs("WARN", user.getUsername(), "User login failed attempt", null);
                     if (user.getIsLocked()) {
-                        db.addUserEventLog(user, "User locked", null);
+                        db.addLogs("WARN", user.getUsername(), "User locked due to failed login attempts", null);
                     }
                 }
 
@@ -49,11 +49,11 @@ public class LoginController {
 
             user.clearAttempts();
             db.saveUserAttempts(user);
-            db.addUserEventLog(user, "User login successful", null);
+            db.addLogs("NOTICE", user.getUsername(), "User login successful", null);
 
             SessionManager.login(db, username);
         } catch (Exception e) {
-            if (db.DEBUG_MODE) e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
             loginView.setErrorMessage("A problem occurred on our side. Please try again later.");
         }
     }

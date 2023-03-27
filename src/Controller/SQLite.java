@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class SQLite {
-    public boolean DEBUG_MODE = false;
+    public static boolean DEBUG_MODE = false;
     String driverURL = "jdbc:sqlite:" + "database.db";
 
     public void createNewDatabase() {
@@ -16,7 +16,7 @@ public class SQLite {
                 System.out.println("Database database.db created.");
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
     }
 
@@ -36,7 +36,7 @@ public class SQLite {
             stmt.execute(sql);
             System.out.println("Table history in database.db created.");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
     }
 
@@ -55,7 +55,7 @@ public class SQLite {
             stmt.execute(sql);
             System.out.println("Table logs in database.db created.");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
     }
 
@@ -73,7 +73,7 @@ public class SQLite {
             stmt.execute(sql);
             System.out.println("Table product in database.db created.");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
     }
 
@@ -92,7 +92,7 @@ public class SQLite {
             stmt.execute(sql);
             System.out.println("Table users in database.db created.");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
     }
 
@@ -110,7 +110,7 @@ public class SQLite {
             stmt.execute(sql);
             System.out.println("Table sessions in database.db created.");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
     }
 
@@ -122,7 +122,7 @@ public class SQLite {
             stmt.execute(sql);
             System.out.println("Table history in database.db dropped.");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
     }
 
@@ -134,7 +134,7 @@ public class SQLite {
             stmt.execute(sql);
             System.out.println("Table logs in database.db dropped.");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
     }
 
@@ -146,7 +146,7 @@ public class SQLite {
             stmt.execute(sql);
             System.out.println("Table product in database.db dropped.");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
     }
 
@@ -158,7 +158,7 @@ public class SQLite {
             stmt.execute(sql);
             System.out.println("Table users in database.db dropped.");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
     }
 
@@ -170,7 +170,7 @@ public class SQLite {
             stmt.execute(sql);
             System.out.println("Table sessions in database.db dropped.");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (DEBUG_MODE) ex.printStackTrace();
         }
     }
 
@@ -206,10 +206,6 @@ public class SQLite {
             stmt.setString(4, timestamp == null ? new Timestamp(new Date().getTime()).toString() : timestamp);
             stmt.executeUpdate();
         }
-    }
-
-    public void addUserEventLog(User user, String desc, String timestamp) throws SQLException {
-        addLogs("NOTICE", user.getUsername(), desc, timestamp);
     }
 
     public void addProduct(Product product) throws SQLException {

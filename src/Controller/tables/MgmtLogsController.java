@@ -35,7 +35,7 @@ public class MgmtLogsController {
                 view.setTableData(db.getLogs());
             }
         } catch (SQLException e) {
-            if (db.DEBUG_MODE) e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
         }
     }
 
@@ -45,12 +45,12 @@ public class MgmtLogsController {
             db.deleteLogs();
             view.clearTableData();
         } catch (SQLException ex) {
-            if (db.DEBUG_MODE) ex.printStackTrace();
+            if (SQLite.DEBUG_MODE) ex.printStackTrace();
         }
     }
 
     private void toggleDebug(ActionEvent e) {
-        var newMode = !db.DEBUG_MODE;
+        var newMode = !SQLite.DEBUG_MODE;
 
         try {
             var session = SessionManager.getSession(db);
@@ -58,10 +58,10 @@ public class MgmtLogsController {
 
             session.setDebugMode(newMode);
             db.updateSession(session);
-            db.DEBUG_MODE = newMode;
+            SQLite.DEBUG_MODE = newMode;
             setupDebugBtn();
         } catch (Exception err) {
-            if (db.DEBUG_MODE) err.printStackTrace();
+            if (SQLite.DEBUG_MODE) err.printStackTrace();
         }
     }
 }

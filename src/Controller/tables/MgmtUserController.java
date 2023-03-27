@@ -30,7 +30,7 @@ public class MgmtUserController {
             view.clearTableData();
             view.setTableData(db.getUsers());
         } catch (SQLException e) {
-            if (db.DEBUG_MODE) e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
         }
     }
 
@@ -45,12 +45,14 @@ public class MgmtUserController {
 
             String username = view.getUsernameAt(idx);
             db.saveUserPassword(new User(username, password));
+            db.addLogs("NOTICE", SessionManager.getUser(db).getUsername(),
+                    "Changed password of user " + username, null);
             view.setTableData(db.getUserByUsername(username), idx);
             view.closeDialog();
         } catch (UsernameException | PasswordException e) {
             view.setErrorMessage(e.getMessage());
         } catch (SQLException e) {
-            if (db.DEBUG_MODE) e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
             view.setErrorMessage("An error has occurred on our end. Please try again later.");
         }
     }
@@ -59,12 +61,17 @@ public class MgmtUserController {
         try {
             if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
             var r = Role.valueOf(Integer.parseInt(role));
-            db.updateUserRoleByUsername(view.getUsernameAt(idx), r);
+            String username = view.getUsernameAt(idx);
+            String oldRole = db.getUserByUsername(username).getRole().name();
+            String newRole = r.name();
+            String desc = "Edited role of user " + username + " from " + oldRole + " to " + newRole;
+            db.updateUserRoleByUsername(username, r);
+            db.addLogs("NOTICE", SessionManager.getUser(db).getUsername(), desc, null);
         } catch (SQLException e) {
-            if (db.DEBUG_MODE) e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
             view.setErrorMessage("An error has occurred on our end. Please try again later.");
         } catch (NullPointerException e) {
-            if (db.DEBUG_MODE) e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
         } finally {
             resetTable();
         }
@@ -73,10 +80,12 @@ public class MgmtUserController {
     private void onDelete(int idx) {
         try {
             if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
-            db.deleteUserByUsername(view.getUsernameAt(idx));
+            String username = view.getUsernameAt(idx);
+            db.deleteUserByUsername(username);
+            db.addLogs("NOTICE", SessionManager.getUser(db).getUsername(), "Deleted user " + username, null);
             view.closeDialog();
         } catch (SQLException e) {
-            if (db.DEBUG_MODE) e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
             view.setErrorMessage("An error has occurred on our end. Please try again later.");
         } finally {
             resetTable();
@@ -86,9 +95,13 @@ public class MgmtUserController {
     private void onLock(int idx) {
         try {
             if (SessionManager.getAuthorizedUser(db, Role.ADMINISTRATOR) == null) return;
-            db.toggleUserLockByUsername(view.getUsernameAt(idx));
+            String username = view.getUsernameAt(idx);
+            String status = db.getUserByUsername(username).getIsLocked() ? "Unlocked" : "Locked";
+            db.toggleUserLockByUsername(username);
+            db.addLogs("NOTICE", SessionManager.getUser(db).getUsername(),
+                    status + " user " + username, null);
         } catch (SQLException e) {
-            if (db.DEBUG_MODE) e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
             view.setErrorMessage("An error has occurred on our end. Please try again later.");
         } finally {
             resetTable();

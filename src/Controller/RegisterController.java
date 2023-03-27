@@ -39,7 +39,7 @@ public class RegisterController {
 
             User user = new User(username, password);
             db.addUser(user);
-            db.addUserEventLog(user, "User creation successful", null);
+            db.addLogs("NOTICE", user.getUsername(), "User creation successful", null);
             main.showPanel(Panel.LOGIN);
         } catch (PasswordException | UsernameException e) {
             regView.setErrorMessage(e.getMessage());
@@ -50,7 +50,7 @@ public class RegisterController {
             }
 
             regView.setErrorMessage("An error has occurred on our end. Please try again later.");
-            if (db.DEBUG_MODE) e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
         }
     }
 }

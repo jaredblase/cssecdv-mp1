@@ -70,11 +70,13 @@ public class SessionManager {
         var sessId = prefs.get(SESSION_ID_KEY, null);
 
         if (sessId != null) {
-            prefs.remove(SESSION_ID_KEY);
             try {
+                String username = getUser(db).getUsername();
+                prefs.remove(SESSION_ID_KEY);
                 db.deleteSessionById(sessId);
+                db.addLogs("NOTICE", username, "User logout successful", null);
             } catch (SQLException e) {
-                e.printStackTrace();
+                if (SQLite.DEBUG_MODE) e.printStackTrace();
             }
         }
 

@@ -9,6 +9,7 @@ import View.MgmtHistory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MgmtHistoryController {
     private final MgmtHistory view;
@@ -35,7 +36,7 @@ public class MgmtHistoryController {
                 return db.getUserHistoryByUsername(user.getUsername());
             }
         } catch (SQLException e) {
-            if (db.DEBUG_MODE) e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
         }
 
         return null;
@@ -58,7 +59,7 @@ public class MgmtHistoryController {
 
         var filtered = getData().stream().filter(h ->
                 text.contains(h.getUsername()) || h.getUsername().contains(text) ||
-                        text.contains(h.getName()) || h.getName().contains(text)
+                        text.contains(h.getName().toLowerCase()) || h.getName().toLowerCase().contains(text)
         ).toList();
 
         view.setTableData(filtered);

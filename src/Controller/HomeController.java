@@ -28,7 +28,7 @@ public class HomeController {
             session = SessionManager.getSession(db);
             user = SessionManager.getUser(db, session);
         } catch (SQLException e) {
-            if (db.DEBUG_MODE) e.printStackTrace();
+            if (SQLite.DEBUG_MODE) e.printStackTrace();
         }
 
         if (user == null) {

@@ -50,8 +50,8 @@ public class User {
     }
 
     private void setUsername(String username) throws UsernameException {
-        if (username.length() > 20) {
-            throw new UsernameException("Username should be less than 20 characters");
+        if (username.length() == 0 || username.length() > 20) {
+            throw new UsernameException("Username should be between 1 to 20 characters");
         }
 
         if (username.contains(" ")) {

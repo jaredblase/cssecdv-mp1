@@ -34,8 +34,8 @@ public class Product {
     }
 
     public void setName(String name) throws Exception {
-        if (name.length() == 0) {
-            throw new Exception("Product name cannot be blank.");
+        if (name.length() == 0 || name.length() > 256) {
+            throw new Exception("Product name must be between 1 to 255 characters.");
         }
         this.name = name.toUpperCase();
     }

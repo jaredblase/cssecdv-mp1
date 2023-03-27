@@ -48,19 +48,16 @@ public class MgmtProductController {
         if (user == null) return;
 
         try {
-            var qty = Integer.parseInt(quantity);
-
-            if (qty <= 0) {
-                throw new NumberFormatException();
+            if (!quantity.matches("\\+?\\d{1,9}")) {
+                throw new Exception("Stock quantity should be positive and have at most 9 digits.");
             }
+            var qty = Integer.parseInt(quantity);
 
             var productName = view.getProductNameAt(index);
             String username = user.getUsername();
             db.addPurchase(username, productName, qty);
             db.addLogs("NOTICE", username, "Purchase of product " + productName + " successful", null);
             view.closeDialog();
-        } catch (NumberFormatException e) {
-            view.setErrorMessage("Input must be a positive whole number.");
         } catch (Exception e) {
             view.setErrorMessage(e.getMessage());
         } finally {
@@ -73,12 +70,18 @@ public class MgmtProductController {
         float prc;
 
         try {
+            if (!stock.matches("\\+?\\d{1,9}")) {
+                throw new Exception("Stock quantity should be positive and have at most 9 digits.");
+            }
             qty = Integer.parseInt(stock);
         } catch (NumberFormatException e) {
             throw new Exception("Stock must be a non-negative integer.");
         }
 
         try {
+            if (!price.matches("\\+?\\d{1,9}(\\.\\d{1,2})?")) {
+                throw new Exception("Price should be positive, have at most 9 digits, and at most 2 decimal places.");
+            }
             prc = Float.parseFloat(price);
         } catch (NumberFormatException e) {
             throw new Exception("Price must be non-negative decimal number.");

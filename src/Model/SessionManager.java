@@ -32,7 +32,7 @@ public class SessionManager {
         var session = db.getSessionById(sessId);
 
         if (session == null || !session.isValid()) {
-            logout(db);
+            logout(db, false);
             return null;
         }
 
@@ -52,7 +52,7 @@ public class SessionManager {
         User user = getUser(db);
 
         if (user == null) {
-            logout(db);
+            logout(db, false);
             return null;
         }
 
@@ -66,15 +66,16 @@ public class SessionManager {
         return null;
     }
 
-    public static void logout(SQLite db) {
+    public static void logout(SQLite db, boolean isValid) {
         var sessId = prefs.get(SESSION_ID_KEY, null);
 
         if (sessId != null) {
             try {
-                String username = getUser(db).getUsername();
+                String username = "";
+                if (isValid) username = getUser(db).getUsername();
                 prefs.remove(SESSION_ID_KEY);
                 db.deleteSessionById(sessId);
-                db.addLogs("NOTICE", username, "User logout successful", null);
+                if (isValid) db.addLogs("NOTICE", username, "User logout successful", null);
             } catch (SQLException e) {
                 if (SQLite.DEBUG_MODE) e.printStackTrace();
             }

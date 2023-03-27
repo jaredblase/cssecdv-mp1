@@ -100,7 +100,7 @@ public class HomeController {
         if (showHome != null) {
             SessionManager.setUnauthorizedListener(showHome);
         }
-        frame.setLogoutActionListener(e -> SessionManager.logout(db));
+        frame.setLogoutActionListener(e -> SessionManager.logout(db, true));
         main.showPanel(Panel.HOME);
     }
 }
